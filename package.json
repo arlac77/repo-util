@@ -35,10 +35,7 @@
     "semantic-release": "^17.4.4"
   },
   "engines": {
-    "node": ">=14.17.2"
-  },
-  "release": {
-    "branches": ["master", "next"]
+    "node": ">=14.17.3"
   },
   "repository": {
     "type": "git",
@@ -48,6 +45,12 @@
     "url": "https://github.com/arlac77/repo-util/issues"
   },
   "homepage": "https://github.com/arlac77/repo-util#readme",
+  "release": {
+    "branches": [
+      "master",
+      "next"
+    ]
+  },
   "template": {
     "inheritFrom": [
       "arlac77/template-arlac77-github",
