@@ -7,3 +7,16 @@
 [![Coverage Status](https://coveralls.io/repos/arlac77/repo-util/badge.svg)](https://coveralls.io/github/arlac77/repo-util)
 # repo-util
 operate on remote repositories
+
+
+# API
+
+# install
+
+```shell
+npm install -g mkpr
+```
+
+# license
+
+BSD-2-Clause
