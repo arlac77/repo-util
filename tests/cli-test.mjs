@@ -6,17 +6,16 @@ test("cli list branches", async t => {
     "node",
     [
       new URL("../src/repo-util-cli.mjs", import.meta.url).pathname,
+      "list-branches",
       "*repository-*"
     ],
     { all: true }
   );
 
-
   t.log(p.all);
   console.log(p.all);
   const m = p.all.match(/repository/);
- // t.truthy(m);
+  // t.truthy(m);
 
- t.is(p.exitCode, 0);
-
+  t.is(p.exitCode, 0);
 });
