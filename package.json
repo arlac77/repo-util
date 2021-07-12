@@ -18,9 +18,9 @@
     "test:ava": "ava --timeout 2m tests/*.mjs"
   },
   "devDependencies": {
-    "semantic-release": "^17.4.4",
+    "ava": "^3.15.0",
     "c8": "^7.7.3",
-    "ava": "^3.15.0"
+    "semantic-release": "^17.4.4"
   },
   "engines": {
     "node": ">=14.17.2"
@@ -38,5 +38,13 @@
       "arlac77/template-arlac77-github",
       "arlac77/template-node-app"
     ]
+  },
+  "dependencies": {
+    "aggregation-repository-provider": "^3.2.21",
+    "bitbucket-repository-provider": "^3.8.6",
+    "commander": "^8.0.0",
+    "gitea-repository-provider": "^1.16.11",
+    "github-repository-provider": "^7.22.9",
+    "local-repository-provider": "^7.0.91"
   }
 }
