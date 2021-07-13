@@ -16,6 +16,14 @@ const { version, description } = JSON.parse(
 
 const properties = {};
 
+async function prepareProvider() {
+  return await AggregationProvider.initialize(
+    [],
+    properties,
+    process.env
+  );
+}
+
 program
   .description(description)
   .version(version)
@@ -33,11 +41,7 @@ program
   .command("list-providers")
   .option("--json", "output as json")
   .action(async options => {
-    const provider = await AggregationProvider.initialize(
-      [],
-      properties,
-      process.env
-    );
+    const provider = await prepareProvider();
     console.log(
       [
         ...provider.providers.map(
@@ -48,11 +52,7 @@ program
   });
 
 program.command("list-repository-groups <name...>").action(async name => {
-  const provider = await AggregationProvider.initialize(
-    [],
-    properties,
-    process.env
-  );
+  const provider = await prepareProvider();
 
   for await (const group of provider.repositoryGroups(name)) {
     console.log(group.name);
@@ -63,11 +63,7 @@ program
   .command("list-repositories <name...>")
   .option("--json", "output as json")
   .action(async (name, options) => {
-    const provider = await AggregationProvider.initialize(
-      [],
-      properties,
-      process.env
-    );
+    const provider = await prepareProvider();
 
     if (options.json) {
       const json = [];
@@ -82,12 +78,36 @@ program
     }
   });
 
+program
+  .command("list-hooks <name...>")
+  .option("--json", "output as json")
+  .action(async (name, options) => {
+    const provider = await prepareProvider();
+
+    if (options.json) {
+      const json = [];
+
+      for await (const repository of provider.repositories(name)) {
+        const r = { name: repository.fullName, hooks: [] };
+        for await (const hook of repository.hooks()) {
+          r.hooks.push(hook);
+        }
+
+        if (r.hooks.length > 0) { json.push(r); }
+      }
+      console.log(JSON.stringify(json));
+    } else {
+      for await (const repository of provider.repositories(name)) {
+        for await (const hook of repository.hooks()) {
+          console.log(repository.fullName);
+          console.log("  " + hook.url);
+        }
+      }
+    }
+  });
+
 program.command("list-branches <name...>").action(async name => {
-  const provider = await AggregationProvider.initialize(
-    [],
-    properties,
-    process.env
-  );
+  const provider = await prepareProvider();
 
   for await (const branch of provider.branches(name)) {
     console.log(branch.fullName);
