@@ -29,18 +29,23 @@ program
     })
   );
 
-program.command("list-providers").action(async name => {
-  const provider = await AggregationProvider.initialize(
-    [],
-    properties,
-    process.env
-  );
-  console.log(
-    [
-      ...provider.providers.map(p => `${p.name}: ${JSON.stringify(p.toJSON())}`)
-    ].join("\n")
-  );
-});
+program
+  .command("list-providers")
+  .option("--json", "output as json")
+  .action(async options => {
+    const provider = await AggregationProvider.initialize(
+      [],
+      properties,
+      process.env
+    );
+    console.log(
+      [
+        ...provider.providers.map(
+          p => `${p.name}: ${JSON.stringify(p.toJSON())}`
+        )
+      ].join("\n")
+    );
+  });
 
 program.command("list-repository-groups <name...>").action(async name => {
   const provider = await AggregationProvider.initialize(
@@ -54,17 +59,28 @@ program.command("list-repository-groups <name...>").action(async name => {
   }
 });
 
-program.command("list-repositories <name...>").action(async name => {
-  const provider = await AggregationProvider.initialize(
-    [],
-    properties,
-    process.env
-  );
+program
+  .command("list-repositories <name...>")
+  .option("--json", "output as json")
+  .action(async (name, options) => {
+    const provider = await AggregationProvider.initialize(
+      [],
+      properties,
+      process.env
+    );
 
-  for await (const repository of provider.repositories(name)) {
-    console.log(repository.name);
-  }
-});
+    if (options.json) {
+      const json = [];
+      for await (const repository of provider.repositories(name)) {
+        json.push(repository);
+      }
+      console.log(JSON.stringify(json));
+    } else {
+      for await (const repository of provider.repositories(name)) {
+        console.log(repository.name);
+      }
+    }
+  });
 
 program.command("list-branches <name...>").action(async name => {
   const provider = await AggregationProvider.initialize(
