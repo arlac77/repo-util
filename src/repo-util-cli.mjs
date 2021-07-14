@@ -17,11 +17,7 @@ const { version, description } = JSON.parse(
 const properties = {};
 
 async function prepareProvider() {
-  return await AggregationProvider.initialize(
-    [],
-    properties,
-    process.env
-  );
+  return await AggregationProvider.initialize([], properties, process.env);
 }
 
 program
@@ -93,7 +89,9 @@ program
           r.hooks.push(hook);
         }
 
-        if (r.hooks.length > 0) { json.push(r); }
+        if (r.hooks.length > 0) {
+          json.push(r);
+        }
       }
       console.log(JSON.stringify(json));
     } else {
@@ -113,5 +111,15 @@ program.command("list-branches <name...>").action(async name => {
     console.log(branch.fullName);
   }
 });
+
+program
+  .command("create-repositories <names...>")
+  .action(async (names, options) => {
+    const provider = await prepareProvider();
+
+    for (const name of names) {
+      await provider.createRepository(name);
+    }
+  });
 
 program.parse(process.argv);
