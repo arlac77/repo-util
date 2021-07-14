@@ -55,24 +55,6 @@ program.command("list-repository-groups <name...>").action(async name => {
   }
 });
 
-program
-  .command("list-repositories <name...>")
-  .option("--json", "output as json")
-  .action(async (name, options) => {
-    const provider = await prepareProvider();
-
-    if (options.json) {
-      const json = [];
-      for await (const repository of provider.repositories(name)) {
-        json.push(repository);
-      }
-      console.log(JSON.stringify(json));
-    } else {
-      for await (const repository of provider.repositories(name)) {
-        console.log(repository.name);
-      }
-    }
-  });
 
 program
   .command("list-hooks <name...>")
@@ -111,6 +93,37 @@ program.command("list-branches <name...>").action(async name => {
     console.log(branch.fullName);
   }
 });
+
+program
+  .command("list-repositories <name...>")
+  .option("--json", "output as json")
+  .action(async (name, options) => {
+    const provider = await prepareProvider();
+
+    if (options.json) {
+      const json = [];
+      for await (const repository of provider.repositories(name)) {
+        json.push(repository);
+      }
+      console.log(JSON.stringify(json));
+    } else {
+      for await (const repository of provider.repositories(name)) {
+        console.log(repository.name);
+      }
+    }
+  });
+
+program
+  .command("update-repositories <names...>")
+  .action(async (names, options) => {
+    const provider = await prepareProvider();
+    for await (const repository of provider.repositories(name)) {
+      for (const [k, v] of Object.entries(properties)) {
+        repository[k] = v;
+      }
+      await repository.update();
+    }
+  });
 
 program
   .command("create-repositories <names...>")
