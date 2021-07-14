@@ -26,10 +26,10 @@ program
   .option("--dry", "do not create branch/pull request")
   .option("--trace", "log level trace")
   .option("--debug", "log level debug")
-  .option("-d, --define <key=value>", "set option", values =>
+  .option("-d, --define <...key=value>", "set option", values =>
     asArray(values).forEach(value => {
       const [k, v] = value.split(/=/);
-      setProperty(properties, k, v);
+      properties[k] = v;
     })
   );
 
@@ -116,9 +116,8 @@ program
   .command("create-repositories <names...>")
   .action(async (names, options) => {
     const provider = await prepareProvider();
-
     for (const name of names) {
-      await provider.createRepository(name);
+      await provider.createRepository(name, properties);
     }
   });
 
