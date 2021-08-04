@@ -94,6 +94,16 @@ program.command("list-branches <name...>").action(async name => {
   }
 });
 
+program.command("list-pull-requests <name...>").action(async name => {
+  const provider = await prepareProvider();
+
+  for await (const repository of provider.repositories(name)) {
+    for await (const pr of repository.pullRequestClass.list(repository)) {
+      console.log(pr.identifier);
+    }
+  }
+});
+
 program
   .command("list-repositories <name...>")
   .option("--json", "output as json")
