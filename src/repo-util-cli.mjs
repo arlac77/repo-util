@@ -99,7 +99,7 @@ program.command("list-pull-requests <name...>").action(async name => {
 
   for await (const repository of provider.repositories(name)) {
     for await (const pr of repository.pullRequestClass.list(repository)) {
-      console.log(pr.identifier);
+      console.log(`${pr.identifier}: ${pr.url}`);
     }
   }
 });
