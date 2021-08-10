@@ -55,7 +55,6 @@ program.command("list-repository-groups <name...>").action(async name => {
   }
 });
 
-
 program
   .command("list-hooks <name...>")
   .option("--json", "output as json")
@@ -86,23 +85,29 @@ program
     }
   });
 
-program.command("list-branches <name...>").action(async name => {
-  const provider = await prepareProvider();
+program
+  .command("list-branches <name...>")
+  .option("--json", "output as json")
+  .action(async name => {
+    const provider = await prepareProvider();
 
-  for await (const branch of provider.branches(name)) {
-    console.log(branch.fullName);
-  }
-});
-
-program.command("list-pull-requests <name...>").action(async name => {
-  const provider = await prepareProvider();
-
-  for await (const repository of provider.repositories(name)) {
-    for await (const pr of repository.pullRequestClass.list(repository)) {
-      console.log(`${pr.identifier}: ${pr.url}`);
+    for await (const branch of provider.branches(name)) {
+      console.log(branch.fullName);
     }
-  }
-});
+  });
+
+program
+  .command("list-pull-requests <name...>")
+  .option("--json", "output as json")
+  .action(async name => {
+    const provider = await prepareProvider();
+
+    for await (const repository of provider.repositories(name)) {
+      for await (const pr of repository.pullRequestClass.list(repository)) {
+        console.log(`${pr.identifier}: ${pr.url}`);
+      }
+    }
+  });
 
 program
   .command("list-repositories <name...>")
