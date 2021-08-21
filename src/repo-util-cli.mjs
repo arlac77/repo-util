@@ -97,15 +97,30 @@ program
   });
 
 program
-  .command("list-pull-requests <name...>")
+  .command("pull-request <name...>")
   .option("--json", "output as json")
-  .action(async name => {
+  .option("--merge", "merge the pr")
+  .action(async(name,options) => {
     const provider = await prepareProvider();
+
+    const json = [];
 
     for await (const repository of provider.repositories(name)) {
       for await (const pr of repository.pullRequestClass.list(repository)) {
-        console.log(`${pr.identifier}: ${pr.url}`);
+        if (options.json) {
+          json.push(pr);
+        }
+        else {
+          console.log(`${pr.identifier}: ${pr.url}`);
+        }
+        if (options.merge) {
+          await pr.merge();
+        }
       }
+    }
+
+    if (options.json) {
+      console.log(JSON.stringify(json));
     }
   });
 
