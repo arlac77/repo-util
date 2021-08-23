@@ -6,7 +6,7 @@ test("cli list branches", async t => {
     "node",
     [
       new URL("../src/repo-util-cli.mjs", import.meta.url).pathname,
-      "list-branches",
+      "branches",
       "*repository-*"
     ],
     { all: true }
@@ -25,7 +25,7 @@ test("cli list repositories as json", async t => {
     "node",
     [
       new URL("../src/repo-util-cli.mjs", import.meta.url).pathname,
-      "list-repositories",
+      "repositories",
       "--json",
       "*/*repository*"
     ],

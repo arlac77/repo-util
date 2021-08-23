@@ -56,7 +56,7 @@ program.command("list-repository-groups <name...>").action(async name => {
 });
 
 program
-  .command("list-hooks <name...>")
+  .command("hooks <name...>")
   .option("--json", "output as json")
   .action(async (name, options) => {
     const provider = await prepareProvider();
@@ -86,7 +86,7 @@ program
   });
 
 program
-  .command("list-branches <name...>")
+  .command("branches <name...>")
   .option("--json", "output as json")
   .action(async name => {
     const provider = await prepareProvider();
@@ -125,7 +125,7 @@ program
   });
 
 program
-  .command("list-repositories <name...>")
+  .command("repositories <name...>")
   .option("--json", "output as json")
   .action(async (name, options) => {
     const provider = await prepareProvider();
