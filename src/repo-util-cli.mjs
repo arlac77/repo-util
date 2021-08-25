@@ -100,21 +100,22 @@ program
   .command("pull-request <name...>")
   .option("--json", "output as json")
   .option("--merge", "merge the pr")
-  .action(async(name,options) => {
+  .action(async (name, options) => {
     const provider = await prepareProvider();
 
     const json = [];
 
     for await (const repository of provider.repositories(name)) {
-      for await (const pr of repository.pullRequestClass.list(repository)) {
-        if (options.json) {
-          json.push(pr);
-        }
-        else {
-          console.log(`${pr.identifier}: ${pr.url}`);
-        }
-        if (options.merge) {
-          await pr.merge();
+      if (!repository.isArchived) {
+        for await (const pr of repository.pullRequestClass.list(repository)) {
+          if (options.json) {
+            json.push(pr);
+          } else {
+            console.log(`${pr.identifier}: ${pr.url}`);
+          }
+          if (options.merge) {
+            await pr.merge();
+          }
         }
       }
     }
