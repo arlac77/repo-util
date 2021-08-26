@@ -25,14 +25,14 @@
     "bitbucket-repository-provider": "^3.9.1",
     "commander": "^8.1.0",
     "gitea-repository-provider": "^1.16.18",
-    "github-repository-provider": "^7.23.8",
-    "local-repository-provider": "^7.0.97"
+    "github-repository-provider": "^7.23.11",
+    "local-repository-provider": "^7.0.98"
   },
   "devDependencies": {
     "ava": "^3.15.0",
     "c8": "^7.8.0",
     "execa": "^5.1.1",
-    "semantic-release": "^17.4.6"
+    "semantic-release": "^17.4.7"
   },
   "engines": {
     "node": ">=14.17.5"
