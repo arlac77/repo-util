@@ -86,7 +86,7 @@ program
   });
 
 program
-  .command("branches <name...>")
+  .command("branch <name...>")
   .option("--json", "output as json")
   .action(async name => {
     const provider = await prepareProvider();
@@ -126,7 +126,7 @@ program
   });
 
 program
-  .command("repositories <name...>")
+  .command("repository <name...>")
   .option("--json", "output as json")
   .action(async (name, options) => {
     const provider = await prepareProvider();
@@ -145,7 +145,7 @@ program
   });
 
 program
-  .command("update-repositories <names...>")
+  .command("update-repository <names...>")
   .action(async (names, options) => {
     const provider = await prepareProvider();
     for await (const repository of provider.repositories(name)) {
@@ -157,7 +157,7 @@ program
   });
 
 program
-  .command("create-repositories <names...>")
+  .command("create-repository <names...>")
   .action(async (names, options) => {
     const provider = await prepareProvider();
     for (const name of names) {
