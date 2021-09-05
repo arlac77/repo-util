@@ -8,13 +8,10 @@ test("cli list branches", async t => {
       new URL("../src/repo-util-cli.mjs", import.meta.url).pathname,
       "branch",
       "*repository-*"
-    ],
-    { all: true }
+    ]
   );
 
-  t.log(p.all);
-  console.log(p.all);
-  const m = p.all.match(/repository/);
+  const m = p.stdout.match(/repository/);
   // t.truthy(m);
 
   t.is(p.exitCode, 0);
@@ -28,11 +25,11 @@ test("cli list repositories as json", async t => {
       "repository",
       "--json",
       "*/*repository*"
-    ],
-    { all: true }
+    ]
   );
+
   t.is(p.exitCode, 0);
 
-  const output = JSON.parse(p.all);
-  t.true(output.length > 1);
+  const output = JSON.parse(p.stdout);
+  t.true(output.length > 5);
 });
