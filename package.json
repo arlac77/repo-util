@@ -22,11 +22,11 @@
   },
   "dependencies": {
     "aggregation-repository-provider": "^3.2.47",
-    "bitbucket-repository-provider": "^3.9.1",
+    "bitbucket-repository-provider": "^3.9.2",
     "commander": "^8.1.0",
     "gitea-repository-provider": "^1.16.27",
     "github-repository-provider": "^7.23.18",
-    "local-repository-provider": "^7.0.101"
+    "local-repository-provider": "^7.0.100"
   },
   "devDependencies": {
     "ava": "^3.15.0",
