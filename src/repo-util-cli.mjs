@@ -34,7 +34,7 @@ program
   );
 
 program
-  .command("list-providers")
+  .command("providers")
   .option("--json", "output as json")
   .action(async options => {
     const provider = await prepareProvider();
@@ -47,7 +47,7 @@ program
     );
   });
 
-program.command("list-repository-groups <name...>").action(async name => {
+program.command("repository-groups <name...>").action(async name => {
   const provider = await prepareProvider();
 
   for await (const group of provider.repositoryGroups(name)) {
