@@ -48,15 +48,16 @@ program
   });
 
 for (const o of [
-  ["repository-group", "repositoryGroups", "name"],
-  ["repository", "repositories", "name"],
-  ["branch", "branches", "fullName"]
+  ["repository-group", "repositoryGroups", ["name"]],
+  ["repository", "repositories", ["name"]],
+  ["branch", "branches", ["fullName"]]
 ]) {
   program
-    .command(`${o[0]} <names...>`)
+    .command(`${o[0]} <name...>`)
     .option("--json", "output as json")
+    .option("-a, --attribute <attributes>", "list attribute", a => a.split(","))
     .action(async (names, options) =>
-      list(await prepareProvider(options), names, options, o[1], o[2])
+      list(await prepareProvider(options), names, options, o[1], options.attribute ? options.attribute : o[2])
     );
 }
 
@@ -91,7 +92,7 @@ program
   });
 
 program
-  .command("pull-request <names...>")
+  .command("pull-request <name...>")
   .option("--json", "output as json")
   .option("--merge", "merge the pr")
   .action(async (names, options) => {
@@ -120,7 +121,7 @@ program
   });
 
 program
-  .command("update-repository <names...>")
+  .command("update-repository <name...>")
   .action(async (names, options) => {
     const provider = await prepareProvider();
     for await (const repository of provider.repositories(names)) {
@@ -132,7 +133,7 @@ program
   });
 
 program
-  .command("create-repository <names...>")
+  .command("create-repository <name...>")
   .action(async (names, options) => {
     const provider = await prepareProvider();
     for (const name of names) {
@@ -142,7 +143,7 @@ program
 
 program.parse(process.argv);
 
-async function list(provider, name, options, slot, nameAttribute = "name") {
+async function list(provider, name, options, slot, attributes) {
   if (options.json) {
     const json = [];
     for await (const object of provider[slot](name)) {
@@ -151,7 +152,9 @@ async function list(provider, name, options, slot, nameAttribute = "name") {
     console.log(JSON.stringify(json));
   } else {
     for await (const object of provider[slot](name)) {
-      console.log(object[nameAttribute]);
+      for (const a of attributes) {
+        console.log(object[a]);
+      }
     }
   }
 }
