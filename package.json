@@ -26,12 +26,12 @@
     "commander": "^8.3.0",
     "gitea-repository-provider": "^1.16.32",
     "github-repository-provider": "^7.23.27",
-    "local-repository-provider": "^7.0.103"
+    "local-repository-provider": "^7.0.104"
   },
   "devDependencies": {
     "ava": "^3.15.0",
     "c8": "^7.10.0",
-    "execa": "^5.1.1",
+    "execa": "^6.0.0",
     "semantic-release": "^18.0.0"
   },
   "engines": {

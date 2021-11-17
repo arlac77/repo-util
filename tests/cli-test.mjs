@@ -1,5 +1,5 @@
 import test from "ava";
-import execa from "execa";
+import { execa } from "execa";
 
 test("cli list branches", async t => {
   const p = await execa(
@@ -31,5 +31,6 @@ test("cli list repositories as json", async t => {
   t.is(p.exitCode, 0);
 
   const output = JSON.parse(p.stdout);
+  
   t.true(output.length > 5);
 });
