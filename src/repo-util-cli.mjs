@@ -57,7 +57,13 @@ for (const o of [
     .option("--json", "output as json")
     .option("-a, --attribute <attributes>", "list attribute", a => a.split(","))
     .action(async (names, options) =>
-      list(await prepareProvider(options), names, options, o[1], options.attribute ? options.attribute : o[2])
+      list(
+        await prepareProvider(options),
+        names,
+        options,
+        o[1],
+        options.attribute ? options.attribute : o[2]
+      )
     );
 }
 
