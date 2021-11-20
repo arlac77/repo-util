@@ -24,7 +24,7 @@
     "aggregation-repository-provider": "^3.2.56",
     "bitbucket-repository-provider": "^3.9.7",
     "commander": "^8.3.0",
-    "gitea-repository-provider": "^1.16.32",
+    "gitea-repository-provider": "^1.16.33",
     "github-repository-provider": "^7.23.30",
     "local-repository-provider": "^7.0.105"
   },
