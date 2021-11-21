@@ -33,21 +33,8 @@ program
     })
   );
 
-program
-  .command("providers")
-  .option("--json", "output as json")
-  .action(async options => {
-    const provider = await prepareProvider();
-    console.log(
-      [
-        ...provider.providers.map(
-          p => `${p.name}: ${JSON.stringify(p.toJSON())}`
-        )
-      ].join("\n")
-    );
-  });
-
 for (const o of [
+  ["provider", "providers", ["name"]],
   ["repository-group", "repositoryGroups", ["name"]],
   ["repository", "repositories", ["name"]],
   ["branch", "branches", ["fullName"]]
