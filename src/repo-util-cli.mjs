@@ -36,8 +36,9 @@ program
 for (const o of [
   ["provider", "providers", ["name"]],
   ["repository-group", "repositoryGroups", ["name"]],
-  ["repository", "repositories", ["name"]],
-  ["branch", "branches", ["fullName"]]
+  ["repository", "repositories", ["fullName"]],
+  ["branch", "branches", ["fullName"]],
+  ["hook", "hooks", ["url"]]
 ]) {
   program
     .command(`${o[0]} <name...>`)
@@ -53,36 +54,6 @@ for (const o of [
       )
     );
 }
-
-program
-  .command("hooks <name...>")
-  .option("--json", "output as json")
-  .action(async (names, options) => {
-    const provider = await prepareProvider();
-
-    if (options.json) {
-      const json = [];
-
-      for await (const repository of provider.repositories(names)) {
-        const r = { name: repository.fullName, hooks: [] };
-        for await (const hook of repository.hooks()) {
-          r.hooks.push(hook);
-        }
-
-        if (r.hooks.length > 0) {
-          json.push(r);
-        }
-      }
-      console.log(JSON.stringify(json));
-    } else {
-      for await (const repository of provider.repositories(names)) {
-        for await (const hook of repository.hooks()) {
-          console.log(repository.fullName);
-          console.log("  " + hook.url);
-        }
-      }
-    }
-  });
 
 program
   .command("pull-request <name...>")
@@ -145,8 +116,12 @@ async function list(provider, name, options, slot, attributes) {
     console.log(JSON.stringify(json));
   } else {
     for await (const object of provider[slot](name)) {
+      let prefix= "";
+      if(object.repository) {
+        prefix = object.repository.fullName + ": ";
+      }
       for (const a of attributes) {
-        console.log(object[a]);
+        console.log(prefix,object[a]);
       }
     }
   }
