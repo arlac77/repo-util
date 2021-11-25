@@ -35,7 +35,7 @@ program
 
 for (const o of [
   ["provider", "providers", ["name"]],
-  ["repository-group", "repositoryGroups", ["name"]],
+  ["group", "repositoryGroups", ["name"]],
   ["repository", "repositories", ["fullName"]],
   ["branch", "branches", ["fullName"]],
   ["hook", "hooks", ["url"]]
