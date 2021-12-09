@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "aggregation-repository-provider": "^4.0.2",
-    "bitbucket-repository-provider": "^3.9.10",
+    "bitbucket-repository-provider": "^3.9.11",
     "commander": "^8.3.0",
     "gitea-repository-provider": "^1.16.35",
     "github-repository-provider": "^7.23.34",
