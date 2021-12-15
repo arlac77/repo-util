@@ -41,7 +41,7 @@ for (const o of [
   ["hook", "hooks", ["url"]]
 ]) {
   program
-    .command(`${o[0]} <name...>`)
+    .command(`${o[0]} [name...]`)
     .option("--json", "output as json")
     .option("-a, --attribute <attributes>", "list attribute", a => a.split(","))
     .action(async (names, options) =>
@@ -56,7 +56,7 @@ for (const o of [
 }
 
 program
-  .command("pull-request <name...>")
+  .command("pull-request [name...]")
   .option("--json", "output as json")
   .option("--merge", "merge the pr")
   .action(async (names, options) => {
@@ -64,7 +64,7 @@ program
 
     const json = [];
 
-    for await (const repository of provider.repositories(names)) {
+    for await (const repository of provider.repositories(normalize(names))) {
       if (!repository.isArchived) {
         for await (const pr of repository.pullRequestClass.list(repository)) {
           if (options.json) {
@@ -107,15 +107,20 @@ program
 
 program.parse(process.argv);
 
-async function list(provider, name, options, slot, attributes) {
+function normalize(names)
+{
+  return names.length === 0 ? ['*'] : names;
+}
+
+async function list(provider, names, options, slot, attributes) {
   if (options.json) {
     const json = [];
-    for await (const object of provider[slot](name)) {
+    for await (const object of provider[slot](normalize(names))) {
       json.push(object);
     }
     console.log(JSON.stringify(json));
   } else {
-    for await (const object of provider[slot](name)) {
+    for await (const object of provider[slot](normalize(names))) {
       let prefix= "";
       if(object.repository) {
         prefix = object.repository.fullName + ": ";
