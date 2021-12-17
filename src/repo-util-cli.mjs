@@ -85,18 +85,6 @@ program
   });
 
 program
-  .command("update-repository <name...>")
-  .action(async (names, options) => {
-    const provider = await prepareProvider();
-    for await (const repository of provider.repositories(names)) {
-      for (const [k, v] of Object.entries(properties)) {
-        repository[k] = v;
-      }
-      await repository.update();
-    }
-  });
-
-program
   .command("create-repository <name...>")
   .action(async (names, options) => {
     const provider = await prepareProvider();
@@ -107,9 +95,8 @@ program
 
 program.parse(process.argv);
 
-function normalize(names)
-{
-  return names.length === 0 ? ['*'] : names;
+function normalize(names) {
+  return names.length === 0 ? ["*"] : names;
 }
 
 async function list(provider, names, options, slot, attributes) {
@@ -121,12 +108,20 @@ async function list(provider, names, options, slot, attributes) {
     console.log(JSON.stringify(json));
   } else {
     for await (const object of provider[slot](normalize(names))) {
-      let prefix= "";
-      if(object.repository) {
-        prefix = object.repository.fullName + ": ";
-      }
-      for (const a of attributes) {
-        console.log(prefix,object[a]);
+      // modify
+      if (Object.keys(properties).length > 0) {
+        for (const [k, v] of Object.entries(properties)) {
+          object[k] = v;
+        }
+        await object.update();
+      } else {
+        let prefix = "";
+        if (object.repository) {
+          prefix = object.repository.fullName + ": ";
+        }
+        for (const a of attributes) {
+          console.log(prefix, object[a]);
+        }
       }
     }
   }

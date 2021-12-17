@@ -9,6 +9,11 @@
 operate on remote repositories
 
 
+# set description
+```sh
+repo-util -Ddescription="Configuration only" repository '*/*config'
+```
+
 # API
 
 # install
