@@ -1,6 +1,6 @@
 {
   "name": "repo-util",
-  "version": "0.0.0-semantic-release",
+  "version": "1.11.1",
   "publishConfig": {
     "access": "public"
   },
@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "aggregation-repository-provider": "^4.0.6",
-    "bitbucket-repository-provider": "^3.9.11",
+    "bitbucket-repository-provider": "^3.10.0",
     "commander": "^8.3.0",
     "gitea-repository-provider": "^1.16.41",
     "github-repository-provider": "^7.23.41",
