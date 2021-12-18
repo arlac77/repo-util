@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 import { readFileSync } from "fs";
-import program from "commander";
+import program, { Option } from "commander";
 import AggregationProvider from "aggregation-repository-provider";
 import { asArray } from "repository-provider";
 
@@ -38,51 +38,41 @@ for (const o of [
   ["group", "repositoryGroups", ["name"]],
   ["repository", "repositories", ["fullName"]],
   ["branch", "branches", ["fullName"]],
-  ["hook", "hooks", ["url"]]
+  ["hook", "hooks", ["url"]],
+  [
+    "pull-request",
+    "pullRequests",
+    ["url"],
+    { merge: { description: "merge the pr", execute: pr => pr.merge() } }
+  ]
 ]) {
-  program
-    .command(`${o[0]} [name...]`)
+  const command = program.command(`${o[0]} [name...]`);
+
+  command
     .option("--json", "output as json")
-    .option("-a, --attribute <attributes>", "list attribute", a => a.split(","))
-    .action(async (names, options) =>
-      list(
-        await prepareProvider(options),
-        names,
-        options,
-        o[1],
-        options.attribute ? options.attribute : o[2]
-      )
+    .option("-a, --attribute <attributes>", "list attribute", a =>
+      a.split(",")
     );
+
+  const actions = o[3];
+
+  if (actions) {
+    for (const [an, options] of Object.entries(actions)) {
+      command.addOption(new Option(`--${an}`, options.description));
+    }
+  }
+
+  command.action(async (names, options) =>
+    list(
+      await prepareProvider(options),
+      names,
+      options,
+      o[1],
+      options.attribute ? options.attribute : o[2],
+      actions
+    )
+  );
 }
-
-program
-  .command("pull-request [name...]")
-  .option("--json", "output as json")
-  .option("--merge", "merge the pr")
-  .action(async (names, options) => {
-    const provider = await prepareProvider();
-
-    const json = [];
-
-    for await (const repository of provider.repositories(normalize(names))) {
-      if (!repository.isArchived) {
-        for await (const pr of repository.pullRequestClass.list(repository)) {
-          if (options.json) {
-            json.push(pr);
-          } else {
-            console.log(`${pr.identifier}: ${pr.url}`);
-          }
-          if (options.merge) {
-            await pr.merge();
-          }
-        }
-      }
-    }
-
-    if (options.json) {
-      console.log(JSON.stringify(json));
-    }
-  });
 
 program
   .command("create-repository <name...>")
@@ -99,7 +89,7 @@ function normalize(names) {
   return names.length === 0 ? ["*"] : names;
 }
 
-async function list(provider, names, options, slot, attributes) {
+async function list(provider, names, options, slot, attributes, actions) {
   if (options.json) {
     const json = [];
     for await (const object of provider[slot](normalize(names))) {
@@ -108,6 +98,12 @@ async function list(provider, names, options, slot, attributes) {
     console.log(JSON.stringify(json));
   } else {
     for await (const object of provider[slot](normalize(names))) {
+      for (const action of Object.keys(actions)) {
+        if (options[action]) {
+          await actions[action].execute();
+        }
+      }
+
       // modify
       if (Object.keys(properties).length > 0) {
         for (const [k, v] of Object.entries(properties)) {
