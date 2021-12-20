@@ -1,5 +1,6 @@
 [![npm](https://img.shields.io/npm/v/repo-util.svg)](https://www.npmjs.com/package/repo-util)
 [![License](https://img.shields.io/badge/License-BSD%203--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
+[![install size](https://packagephobia.now.sh/badge?p=repo-util/@1.11.1)](https://packagephobia.now.sh/result?p=repo-util@1.11.1)
 [![minified size](https://badgen.net/bundlephobia/min/repo-util)](https://bundlephobia.com/result?p=repo-util)
 [![downloads](http://img.shields.io/npm/dm/repo-util.svg?style=flat-square)](https://npmjs.org/package/repo-util)
 [![GitHub Issues](https://img.shields.io/github/issues/arlac77/repo-util.svg?style=flat-square)](https://github.com/arlac77/repo-util/issues)
