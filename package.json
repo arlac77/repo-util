@@ -25,8 +25,8 @@
     "bitbucket-repository-provider": "^3.10.0",
     "commander": "^8.3.0",
     "gitea-repository-provider": "^1.16.46",
-    "github-repository-provider": "^7.23.46",
-    "local-repository-provider": "^7.0.108"
+    "github-repository-provider": "^7.24.0",
+    "local-repository-provider": "^7.0.110"
   },
   "devDependencies": {
     "ava": "^3.15.0",
