@@ -98,12 +98,13 @@ async function list(provider, names, options, slot, attributes, actions) {
     console.log(JSON.stringify(json));
   } else {
     for await (const object of provider[slot](normalize(names))) {
-      for (const action of Object.keys(actions)) {
-        if (options[action]) {
-          await actions[action].execute();
+      if (actions) {
+        for (const action of Object.keys(actions)) {
+          if (options[action]) {
+            await actions[action].execute();
+          }
         }
       }
-
       // modify
       if (Object.keys(properties).length > 0) {
         for (const [k, v] of Object.entries(properties)) {
