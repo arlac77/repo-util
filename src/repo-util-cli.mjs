@@ -99,9 +99,9 @@ async function list(provider, names, options, slot, attributes, actions) {
   } else {
     for await (const object of provider[slot](normalize(names))) {
       if (actions) {
-        for (const action of Object.keys(actions)) {
-          if (options[action]) {
-            await actions[action].execute();
+        for (const [name, action] of Object.entries(actions)) {
+          if (options[name]) {
+            await action.execute();
           }
         }
       }
