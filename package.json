@@ -26,7 +26,7 @@
     "commander": "^8.3.0",
     "gitea-repository-provider": "^1.16.54",
     "github-repository-provider": "^7.25.14",
-    "local-repository-provider": "^7.0.112"
+    "local-repository-provider": "^7.0.114"
   },
   "devDependencies": {
     "ava": "^4.0.1",
