@@ -26,11 +26,8 @@ program
   .option("--dry", "do not create branch/pull request")
   .option("--trace", "log level trace")
   .option("--debug", "log level debug")
-  .option("-d, --define <...key=value>", "set option", values =>
-    asArray(values).forEach(value => {
-      const [k, v] = value.split(/=/);
-      properties[k] = v;
-    })
+  .option("-D --define <a=b>", "define property", str =>
+    Object.assign(properties, Object.fromEntries([str.split(/=/)]))
   );
 
 for (const o of [
@@ -90,27 +87,25 @@ function normalize(names) {
 }
 
 async function list(provider, names, options, slot, attributes, actions) {
-  if (options.json) {
-    const json = [];
-    for await (const object of provider[slot](normalize(names))) {
-      json.push(object);
-    }
-    console.log(JSON.stringify(json));
-  } else {
-    for await (const object of provider[slot](normalize(names))) {
-      if (actions) {
-        for (const [name, action] of Object.entries(actions)) {
-          if (options[name]) {
-            await action.execute();
-          }
+  const json = [];
+
+  for await (const object of provider[slot](normalize(names))) {
+    if (actions) {
+      for (const [name, action] of Object.entries(actions)) {
+        if (options[name]) {
+          await action.execute();
         }
       }
-      // modify
-      if (Object.keys(properties).length > 0) {
-        for (const [k, v] of Object.entries(properties)) {
-          object[k] = v;
-        }
-        await object.update();
+    }
+    // modify
+    if (Object.keys(properties).length > 0) {
+      for (const [k, v] of Object.entries(properties)) {
+        object[k] = v;
+      }
+      await object.update();
+    } else {
+      if (options.json) {
+        json.push(object);
       } else {
         let prefix = "";
         if (object.repository) {
@@ -121,5 +116,9 @@ async function list(provider, names, options, slot, attributes, actions) {
         }
       }
     }
+  }
+
+  if (options.json) {
+    console.log(JSON.stringify(json));
   }
 }
