@@ -1,9 +1,8 @@
 #!/usr/bin/env node
 
 import { readFileSync } from "fs";
-import program, { Option } from "commander";
+import { program, Option } from "commander";
 import AggregationProvider from "aggregation-repository-provider";
-import { asArray } from "repository-provider";
 
 process.on("uncaughtException", err => console.error(err));
 process.on("unhandledRejection", reason => console.error(reason));
