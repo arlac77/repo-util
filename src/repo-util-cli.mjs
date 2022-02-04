@@ -106,12 +106,8 @@ async function list(provider, names, options, slot, attributes, actions) {
       if (options.json) {
         json.push(object);
       } else {
-        let prefix = "";
-        if (object.repository) {
-          prefix = object.repository.fullName + ": ";
-        }
         for (const a of attributes) {
-          console.log(prefix, object[a]);
+          console.log(object.fullName + ":", object[a]);
         }
       }
     }
