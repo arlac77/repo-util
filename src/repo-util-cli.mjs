@@ -30,7 +30,7 @@ program
   );
 
 for (const o of [
-  ["provider", "providers", ["name"]],
+  ["provider", "providers", ["fullName"]],
   ["group", "repositoryGroups", ["name"]],
   ["repository", "repositories", ["fullName"]],
   ["branch", "branches", ["fullName"]],
