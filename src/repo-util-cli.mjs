@@ -34,6 +34,8 @@ for (const o of [
   ["group", "repositoryGroups", ["fullName"]],
   ["repository", "repositories", ["fullName"]],
   ["branch", "branches", ["fullName"]],
+  ["project", "projects", ["fullName"]],
+  ["milestone", "milestones", ["fullName"]],
   ["hook", "hooks", ["url"]],
   [
     "pull-request",
