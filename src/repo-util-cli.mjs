@@ -16,7 +16,15 @@ const { version, description } = JSON.parse(
 const properties = {};
 
 async function prepareProvider() {
-  return await AggregationProvider.initialize([], properties, process.env);
+  const provider = await AggregationProvider.initialize([], properties, process.env);
+
+  provider.messageDestination = {
+    info : () => {},
+    warn : console.warn,
+    error: console.error
+  };
+
+  return provider;
 }
 
 program
