@@ -4,8 +4,8 @@ import { readFileSync } from "fs";
 import { program, Option } from "commander";
 import AggregationProvider from "aggregation-repository-provider";
 
-process.on("uncaughtException", err => console.error(err));
-process.on("unhandledRejection", reason => console.error(reason));
+process.on("uncaughtException", console.error);
+process.on("unhandledRejection", console.error);
 
 const { version, description } = JSON.parse(
   readFileSync(new URL("../package.json", import.meta.url).pathname, {
@@ -30,7 +30,6 @@ async function prepareProvider() {
 program
   .description(description)
   .version(version)
-  .option("--dry", "do not create branch/pull request")
   .option("--trace", "log level trace")
   .option("--debug", "log level debug")
   .option("-D --define <a=b>", "define property", str =>
