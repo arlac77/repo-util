@@ -15,18 +15,6 @@ const { version, description } = JSON.parse(
 
 const properties = {};
 
-async function prepareProvider() {
-  const provider = await AggregationProvider.initialize([], properties, process.env);
-
-  provider.messageDestination = {
-    info : () => {},
-    warn : console.warn,
-    error: console.error
-  };
-
-  return provider;
-}
-
 program
   .description(description)
   .version(version)
@@ -125,4 +113,16 @@ async function list(provider, names, options, slot, attributes, actions) {
   if (options.json) {
     console.log(JSON.stringify(json));
   }
+}
+
+async function prepareProvider() {
+  const provider = await AggregationProvider.initialize([], properties, process.env);
+
+  provider.messageDestination = {
+    info : () => {},
+    warn : console.warn,
+    error: console.error
+  };
+
+  return provider;
 }
