@@ -43,6 +43,7 @@ for (const o of [
 
   command
     .option("--json", "output as json")
+    .option("--no-identifier", "do not output identifier attributes only")
     .option("-a, --attribute <attributes>", "list attribute", a =>
       a.split(",")
     );
@@ -104,7 +105,11 @@ async function list(provider, names, options, slot, attributes, actions) {
         json.push(object);
       } else {
         for (const a of attributes) {
-          console.log(object.fullName + ":", object[a]);
+          if (options.identifier === false) {
+            console.log(object[a]);
+          } else {
+            console.log(object.fullName + ":", object[a]);
+          }
         }
       }
     }
@@ -115,12 +120,16 @@ async function list(provider, names, options, slot, attributes, actions) {
   }
 }
 
-async function prepareProvider() {
-  const provider = await AggregationProvider.initialize([], properties, process.env);
+async function prepareProvider(options) {
+  const provider = await AggregationProvider.initialize(
+    [],
+    properties,
+    process.env
+  );
 
   provider.messageDestination = {
-    info : () => {},
-    warn : console.warn,
+    info: () => {},
+    warn: console.warn,
     error: console.error
   };
 
