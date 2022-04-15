@@ -31,7 +31,12 @@ for (const o of [
   ["branch", "branches", ["fullName"]],
   ["project", "projects", ["fullName"]],
   ["milestone", "milestones", ["fullName"]],
-  ["hook", "hooks", ["url"]],
+  [
+    "hook",
+    "hooks",
+    ["url", "events", "active"],
+    { create: { description: "create a hook", execute: () => {} } }
+  ],
   [
     "pull-request",
     "pullRequests",
@@ -105,10 +110,17 @@ async function list(provider, names, options, slot, attributes, actions) {
         json.push(object);
       } else {
         for (const a of attributes) {
+          let value = object[a];
+          if (Array.isArray(value)) {
+            value = value.join(" ");
+          } else if (value instanceof Set) {
+            value = [...value].join(" ");
+          }
+
           if (options.identifier === false) {
-            console.log(object[a]);
+            console.log(value);
           } else {
-            console.log(object.fullName + ":", object[a]);
+            console.log(object.fullName + ":", value);
           }
         }
       }
