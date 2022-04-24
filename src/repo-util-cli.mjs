@@ -140,6 +140,7 @@ async function prepareProvider(options) {
   );
 
   provider.messageDestination = {
+    trace: () => {},
     info: () => {},
     warn: console.warn,
     error: console.error
