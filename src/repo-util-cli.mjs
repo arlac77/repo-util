@@ -25,7 +25,7 @@ program
   );
 
 for (const o of [
-  ["provider", "providers", ["fullName"]],
+  ["provider", "providers", ["fullName", "url", "priority"]],
   ["group", "repositoryGroups", ["fullName"]],
   ["repository", "repositories", ["fullName"]],
   ["branch", "branches", ["fullName"]],
@@ -120,7 +120,12 @@ async function list(provider, names, options, slot, attributes, actions) {
           if (options.identifier === false) {
             console.log(value);
           } else {
-            console.log(object.fullName + ":", value);
+            console.log(
+              attributes.indexOf(a) === 0
+                ? object.fullName + ":"
+                : "           ".substring(a.length) + a + ":",
+              value
+            );
           }
         }
       }
