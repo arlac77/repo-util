@@ -25,7 +25,11 @@ program
   );
 
 for (const o of [
-  ["provider", "providers", ["fullName", "url", "priority"]],
+  [
+    "provider",
+    "providers",
+    ["name", ...Object.keys(visibleAttributes(AggregationProvider))]
+  ],
   ["group", "repositoryGroups", ["fullName"]],
   ["repository", "repositories", ["fullName"]],
   ["branch", "branches", ["fullName"]],
@@ -115,6 +119,8 @@ async function list(provider, names, options, slot, attributes, actions) {
             value = value.join(" ");
           } else if (value instanceof Set) {
             value = [...value].join(" ");
+          } else if (value === undefined) {
+            value = "";
           }
 
           if (options.identifier === false) {
@@ -123,7 +129,7 @@ async function list(provider, names, options, slot, attributes, actions) {
             console.log(
               attributes.indexOf(a) === 0
                 ? object.fullName + ":"
-                : "           ".substring(a.length) + a + ":",
+                : "             ".substring(a.length) + a + ":",
               value
             );
           }
@@ -152,4 +158,10 @@ async function prepareProvider(options) {
   };
 
   return provider;
+}
+
+function visibleAttributes(object) {
+  return Object.fromEntries(
+    Object.entries(object.attributes).filter(([k, v]) => k!=="name" && !v.private)
+  );
 }
