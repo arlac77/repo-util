@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import { readFileSync } from "fs";
+import { fileURLToPath } from "url";
 import { program, Option } from "commander";
 import AggregationProvider from "aggregation-repository-provider";
 
@@ -8,7 +9,7 @@ process.on("uncaughtException", console.error);
 process.on("unhandledRejection", console.error);
 
 const { version, description } = JSON.parse(
-  readFileSync(new URL("../package.json", import.meta.url).pathname, {
+  readFileSync(fileURLToPath(new URL("../package.json", import.meta.url)), {
     encoding: "utf8"
   })
 );
