@@ -20,18 +20,15 @@ jobs:
       - run: npm run cover --if-present
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
-          BITBUCKET_USERNAME: ${{ secrets.BITBUCKET_USERNAME }}
-          BITBUCKET_APP_PASSWORD: ${{ secrets.BITBUCKET_APP_PASSWORD }}
-          GITEA_API: ${{ secrets.GITEA_API }}
-          GITEA_TOKEN: ${{ secrets.GITEA_TOKEN }}
+          AGGREGATION_FACTORIES: github-repository-provider
       - name: Coveralls Parallel
         uses: coverallsapp/github-action@master
-        continue-on-error: true
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           flag-name: run-${{ matrix.test_number }}
           path-to-lcov: build/coverage/lcov.info
           parallel: true
+        continue-on-error: true
   release:
     needs:
       - test
