@@ -29,7 +29,7 @@ for (const o of [
   [
     "provider",
     "providers",
-    ["name", ...Object.keys(visibleAttributes(AggregationProvider))]
+    ["fullName", ...Object.keys(visibleAttributes(AggregationProvider))]
   ],
   ["group", "repositoryGroups", ["fullName"]],
   ["repository", "repositories", ["fullName"]],
@@ -163,6 +163,8 @@ async function prepareProvider(options) {
 
 function visibleAttributes(object) {
   return Object.fromEntries(
-    Object.entries(object.attributes).filter(([k, v]) => k!=="name" && !v.private)
+    Object.entries(object.attributes).filter(
+      ([k, v]) => k !== "name" && !v.private
+    )
   );
 }
