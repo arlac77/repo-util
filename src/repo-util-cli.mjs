@@ -32,10 +32,13 @@ for (const o of [
     ["fullName", ...Object.keys(visibleAttributes(AggregationProvider))]
   ],
   ["group", "repositoryGroups", ["fullName"]],
-  ["repository", "repositories", ["fullName"]],
+  ["repository", "repositories", ["fullName"],{
+  	create: { description: "create a repository", execute: () => {}}
+  }],
   ["branch", "branches", ["fullName"]],
   ["project", "projects", ["fullName"]],
   ["milestone", "milestones", ["fullName"]],
+  ["application","applications", ["fullName"]],
   [
     "hook",
     "hooks",
@@ -76,6 +79,7 @@ for (const o of [
       actions
     )
   );
+  
 }
 
 program
