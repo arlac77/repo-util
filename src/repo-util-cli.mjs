@@ -32,43 +32,66 @@ for (const o of [
     ["fullName", ...Object.keys(visibleAttributes(AggregationProvider))]
   ],
   ["group", "repositoryGroups", ["fullName"]],
-  ["repository", "repositories", ["fullName"],{
-  	create: { description: "create a repository", execute: () => {}}
-  }],
+  [
+    "repository",
+    "repositories",
+    ["fullName"],
+    {
+      create: {
+        suffix: "<names>",
+        description: "create a repository",
+        execute: async (provider, names, options) => {
+          for (const name of names) {
+            await provider.createRepository(name, properties);
+          }
+        }
+      }
+    }
+  ],
   ["branch", "branches", ["fullName"]],
   ["project", "projects", ["fullName"]],
   ["milestone", "milestones", ["fullName"]],
-  ["application","applications", ["fullName"]],
+  ["application", "applications", ["fullName"]],
   [
     "hook",
     "hooks",
     ["url", "events", "active"],
-    { create: { description: "create a hook", execute: () => {} } }
+    {
+      create: {
+        suffix: "<name>",
+        description: "create a hook",
+        execute: () => {
+          console.log("create a hook");
+        }
+      }
+    }
   ],
   [
     "pull-request",
     "pullRequests",
     ["url"],
-    { merge: { description: "merge the pr", execute: pr => pr.merge() } }
+    {
+      merge: {
+        suffix: "<names>",
+        description: "merge the pr",
+        execute: async (provider, names, options) => {
+          for (const name of names) {
+            for await (const pr of provider.pullRequests(name)) {
+              await pr.merge();
+            }
+          }
+        }
+      }
+    }
   ]
 ]) {
   const command = program.command(`${o[0]} [name...]`);
-
   command
     .option("--json", "output as json")
     .option("--no-identifier", "do not output identifier attributes only")
     .option("-a, --attribute <attributes>", "list attribute", a =>
       a.split(",")
     );
-
-  const actions = o[3];
-
-  if (actions) {
-    for (const [an, options] of Object.entries(actions)) {
-      command.addOption(new Option(`--${an}`, options.description));
-    }
-  }
-
   command.action(async (names, options) =>
     list(
       await prepareProvider(options),
@@ -79,17 +102,22 @@ for (const o of [
       actions
     )
   );
-  
-}
 
-program
-  .command("create-repository <name...>")
-  .action(async (names, options) => {
-    const provider = await prepareProvider();
-    for (const name of names) {
-      await provider.createRepository(name, properties);
+  const actions = o[3];
+
+  if (actions) {
+    for (const [an, actionOptions] of Object.entries(actions)) {
+      const command = program.command(`${o[0]}-${an} ${actionOptions.suffix}`);
+      command.action(async (names, options) => {
+        await actionOptions.execute(
+          await prepareProvider(options),
+          names,
+          options
+        );
+      });
     }
-  });
+  }
+}
 
 program.parse(process.argv);
 
