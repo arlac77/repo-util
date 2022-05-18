@@ -37,9 +37,13 @@ for (const o of [
     "repositories",
     ["fullName"],
     {
+      update: {
+        description: "update repository attributes",
+        executeInstance: async repository => repository.update(properties)
+      },
       create: {
         suffix: "<names>",
-        description: "create a repository",
+        description: "create repositories",
         execute: async (provider, names, options) => {
           for (const name of names) {
             await provider.createRepository(name, properties);
@@ -71,16 +75,13 @@ for (const o of [
     "pullRequests",
     ["url"],
     {
+      update: {
+        description: "update pr attributes",
+        executeInstance: async pr => pr.update(properties)
+      },
       merge: {
-        suffix: "<names>",
         description: "merge the pr",
-        execute: async (provider, names, options) => {
-          for (const name of names) {
-            for await (const pr of provider.pullRequests(name)) {
-              await pr.merge();
-            }
-          }
-        }
+        executeInstance: async (pr, options) => pr.merge()
       }
     }
   ]
@@ -107,14 +108,22 @@ for (const o of [
 
   if (actions) {
     for (const [an, actionOptions] of Object.entries(actions)) {
-      const command = program.command(`${o[0]}-${an} ${actionOptions.suffix}`);
-      command.action(async (names, options) => {
-        await actionOptions.execute(
-          await prepareProvider(options),
-          names,
-          options
+      if (actionOptions.execute) {
+        const command = program.command(
+          `${o[0]}-${an} ${actionOptions.suffix}`
         );
-      });
+
+        command.action(async (names, options) => {
+          await actionOptions.execute(
+            await prepareProvider(options),
+            names,
+            options
+          );
+        });
+      }
+      if (actionOptions.executeInstance) {
+        command.option(`--${an}`, actionOptions.description);
+      }
     }
   }
 }
@@ -131,8 +140,8 @@ async function list(provider, names, options, slot, attributes, actions) {
   for await (const object of provider[slot](normalize(names))) {
     if (actions) {
       for (const [name, action] of Object.entries(actions)) {
-        if (options[name]) {
-          await action.execute();
+        if (options[name] && action.executeInstance) {
+          await action.executeInstance(object, options);
         }
       }
     }
