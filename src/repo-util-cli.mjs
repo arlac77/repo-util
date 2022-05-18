@@ -89,7 +89,7 @@ for (const o of [
   const command = program.command(`${o[0]} [name...]`);
   command
     .option("--json", "output as json")
-    .option("--no-identifier", "do not output identifier attributes only")
+    .option("--no-identifier", "do not output identifier, show attributes only")
     .option("-a, --attribute <attributes>", "list attribute", a =>
       a.split(",")
     );
