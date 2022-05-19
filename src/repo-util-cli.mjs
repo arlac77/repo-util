@@ -67,7 +67,15 @@ for (const o of [
         execute: () => {
           console.log("create a hook");
         }
-      }
+      },
+      update: {
+        description: "update hook attributes",
+        executeInstance: hook => hook.update(properties)
+      },
+      delete: {
+        description: "delete a hook",
+        executeInstance: hook => hook.delete()
+      },
     }
   ],
   [
@@ -77,11 +85,15 @@ for (const o of [
     {
       update: {
         description: "update pr attributes",
-        executeInstance: async pr => pr.update(properties)
+        executeInstance: pr => pr.update(properties)
       },
       merge: {
         description: "merge the pr",
-        executeInstance: async (pr, options) => pr.merge()
+        executeInstance: pr => pr.merge()
+      },
+      decline: {
+        description: "decline the pr",
+        executeInstance: pr => pr.decline()
       }
     }
   ]
