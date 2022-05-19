@@ -75,7 +75,7 @@ for (const o of [
       delete: {
         description: "delete a hook",
         executeInstance: hook => hook.delete()
-      },
+      }
     }
   ],
   [
