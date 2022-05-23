@@ -29,9 +29,22 @@ for (const o of [
   [
     "provider",
     "providers",
-    ["fullName", ...Object.keys(visibleAttributes(AggregationProvider))]
+    ["fullName", ...Object.keys(visibleAttributes(AggregationProvider))],
+    {
+      update: {
+        description: "update provider attributes",
+        executeInstance: async provider => provider.update(properties)
+      }
+    }
   ],
-  ["group", "repositoryGroups", ["fullName"]],
+  ["group", "repositoryGroups", ["fullName"],
+    {
+      update: {
+        description: "update group attributes",
+        executeInstance: async group => group.update(properties)
+      }
+    }  
+  ],
   [
     "repository",
     "repositories",
