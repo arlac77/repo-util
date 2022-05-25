@@ -3,7 +3,17 @@
 import { readFileSync } from "fs";
 import { fileURLToPath } from "url";
 import { program, Option } from "commander";
-import { Repository, RepositoryGroup, Branch, Tag, Application, Project, Milestone, Hook, PullRequest } from "repository-provider";
+import {
+  Repository,
+  RepositoryGroup,
+  Branch,
+  Tag,
+  Application,
+  Project,
+  Milestone,
+  Hook,
+  PullRequest
+} from "repository-provider";
 import AggregationProvider from "aggregation-repository-provider";
 
 process.on("uncaughtException", console.error);
@@ -38,13 +48,16 @@ for (const o of [
       }
     }
   ],
-  ["group", "repositoryGroups", ["fullName", ...Object.keys(visibleAttributes(RepositoryGroup))],
+  [
+    "group",
+    "repositoryGroups",
+    ["fullName", ...Object.keys(visibleAttributes(RepositoryGroup))],
     {
       update: {
         description: "update group attributes",
         executeInstance: async group => group.update(properties)
       }
-    }  
+    }
   ],
   [
     "repository",
@@ -66,11 +79,27 @@ for (const o of [
       }
     }
   ],
-  ["branch", "branches", ["fullName", ...Object.keys(visibleAttributes(Branch))]],
-  ["tag", "tags", ["fullName", ...Object.keys(visibleAttributes(Hook))]],
-  ["project", "projects", ["fullName", ...Object.keys(visibleAttributes(Project))]],
-  ["milestone", "milestones", ["fullName", ...Object.keys(visibleAttributes(Milestone))]],
-  ["application", "applications", ["fullName", ...Object.keys(visibleAttributes(Application))]],
+  [
+    "branch",
+    "branches",
+    ["fullName", ...Object.keys(visibleAttributes(Branch))]
+  ],
+  ["tag", "tags", ["fullName", ...Object.keys(visibleAttributes(Tag))]],
+  [
+    "project",
+    "projects",
+    ["fullName", ...Object.keys(visibleAttributes(Project))]
+  ],
+  [
+    "milestone",
+    "milestones",
+    ["fullName", ...Object.keys(visibleAttributes(Milestone))]
+  ],
+  [
+    "application",
+    "applications",
+    ["fullName", ...Object.keys(visibleAttributes(Application))]
+  ],
   [
     "hook",
     "hooks",
