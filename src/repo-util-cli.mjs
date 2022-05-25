@@ -3,6 +3,7 @@
 import { readFileSync } from "fs";
 import { fileURLToPath } from "url";
 import { program, Option } from "commander";
+import { Repository, RepositoryGroup, Branch, Tag, Application, Project, Milestone, Hook, PullRequest } from "repository-provider";
 import AggregationProvider from "aggregation-repository-provider";
 
 process.on("uncaughtException", console.error);
@@ -37,7 +38,7 @@ for (const o of [
       }
     }
   ],
-  ["group", "repositoryGroups", ["fullName"],
+  ["group", "repositoryGroups", ["fullName", ...Object.keys(visibleAttributes(RepositoryGroup))],
     {
       update: {
         description: "update group attributes",
@@ -48,7 +49,7 @@ for (const o of [
   [
     "repository",
     "repositories",
-    ["fullName"],
+    ["fullName", ...Object.keys(visibleAttributes(Repository))],
     {
       update: {
         description: "update repository attributes",
@@ -65,14 +66,15 @@ for (const o of [
       }
     }
   ],
-  ["branch", "branches", ["fullName"]],
-  ["project", "projects", ["fullName"]],
-  ["milestone", "milestones", ["fullName"]],
-  ["application", "applications", ["fullName"]],
+  ["branch", "branches", ["fullName", ...Object.keys(visibleAttributes(Branch))]],
+  ["tag", "tags", ["fullName", ...Object.keys(visibleAttributes(Hook))]],
+  ["project", "projects", ["fullName", ...Object.keys(visibleAttributes(Project))]],
+  ["milestone", "milestones", ["fullName", ...Object.keys(visibleAttributes(Milestone))]],
+  ["application", "applications", ["fullName", ...Object.keys(visibleAttributes(Application))]],
   [
     "hook",
     "hooks",
-    ["url", "events", "active"],
+    ["url", ...Object.keys(visibleAttributes(Hook))],
     {
       create: {
         suffix: "<name>",
@@ -94,7 +96,7 @@ for (const o of [
   [
     "pull-request",
     "pullRequests",
-    ["url"],
+    ["url", ...Object.keys(visibleAttributes(PullRequest))],
     {
       update: {
         description: "update pr attributes",
