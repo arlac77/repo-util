@@ -12,7 +12,8 @@ import {
   Project,
   Milestone,
   Hook,
-  PullRequest
+  PullRequest,
+  MultiGroupProvider
 } from "repository-provider";
 import AggregationProvider from "aggregation-repository-provider";
 
@@ -40,7 +41,7 @@ for (const o of [
   [
     "provider",
     "providers",
-    ["fullName", ...Object.keys(visibleAttributes(AggregationProvider))],
+    ["fullName", ...Object.keys(visibleAttributes(MultiGroupProvider))],
     {
       update: {
         description: "update provider attributes",
