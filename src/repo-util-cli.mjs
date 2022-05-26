@@ -38,110 +38,69 @@ program
   );
 
 for (const o of [
-  [
-    "provider",
-    "providers",
-    ["fullName", ...Object.keys(visibleAttributes(MultiGroupProvider))],
-    {
-      update: {
-        description: "update provider attributes",
-        executeInstance: async provider => provider.update(properties)
-      }
+  type(MultiGroupProvider, {
+    update: {
+      description: "update provider attributes",
+      executeInstance: async provider => provider.update(properties)
     }
-  ],
-  [
-    "group",
-    "repositoryGroups",
-    ["fullName", ...Object.keys(visibleAttributes(RepositoryGroup))],
-    {
-      update: {
-        description: "update group attributes",
-        executeInstance: async group => group.update(properties)
-      }
+  }),
+  type(RepositoryGroup, {
+    update: {
+      description: "update group attributes",
+      executeInstance: async group => group.update(properties)
     }
-  ],
-  [
-    "repository",
-    "repositories",
-    ["fullName", ...Object.keys(visibleAttributes(Repository))],
-    {
-      update: {
-        description: "update repository attributes",
-        executeInstance: async repository => repository.update(properties)
-      },
-      create: {
-        suffix: "<names>",
-        description: "create repositories",
-        execute: async (provider, names, options) => {
-          for (const name of names) {
-            await provider.createRepository(name, properties);
-          }
+  }),
+  type(Repository, {
+    update: {
+      description: "update repository attributes",
+      executeInstance: async repository => repository.update(properties)
+    },
+    create: {
+      suffix: "<names>",
+      description: "create repositories",
+      execute: async (provider, names, options) => {
+        for (const name of names) {
+          await provider.createRepository(name, properties);
         }
       }
     }
-  ],
-  [
-    "branch",
-    "branches",
-    ["fullName", ...Object.keys(visibleAttributes(Branch))]
-  ],
-  ["tag", "tags", ["fullName", ...Object.keys(visibleAttributes(Tag))]],
-  [
-    "project",
-    "projects",
-    ["fullName", ...Object.keys(visibleAttributes(Project))]
-  ],
-  [
-    "milestone",
-    "milestones",
-    ["fullName", ...Object.keys(visibleAttributes(Milestone))]
-  ],
-  [
-    "application",
-    "applications",
-    ["fullName", ...Object.keys(visibleAttributes(Application))]
-  ],
-  [
-    "hook",
-    "hooks",
-    ["url", ...Object.keys(visibleAttributes(Hook))],
-    {
-      create: {
-        suffix: "<name>",
-        description: "create a hook",
-        execute: () => {
-          console.log("create a hook");
-        }
-      },
-      update: {
-        description: "update hook attributes",
-        executeInstance: hook => hook.update(properties)
-      },
-      delete: {
-        description: "delete a hook",
-        executeInstance: hook => hook.delete()
+  }),
+  type(Branch),
+  type(Tag),
+  type(Project),
+  type(Milestone),
+  type(Application),
+  type(Hook, {
+    create: {
+      suffix: "<name>",
+      description: "create a hook",
+      execute: () => {
+        console.log("create a hook");
       }
+    },
+    update: {
+      description: "update hook attributes",
+      executeInstance: hook => hook.update(properties)
+    },
+    delete: {
+      description: "delete a hook",
+      executeInstance: hook => hook.delete()
     }
-  ],
-  [
-    "pull-request",
-    "pullRequests",
-    ["url", ...Object.keys(visibleAttributes(PullRequest))],
-    {
-      update: {
-        description: "update pr attributes",
-        executeInstance: pr => pr.update(properties)
-      },
-      merge: {
-        description: "merge the pr",
-        executeInstance: pr => pr.merge()
-      },
-      decline: {
-        description: "decline the pr",
-        executeInstance: pr => pr.decline()
-      }
+  }),
+  type(PullRequest, {
+    update: {
+      description: "update pr attributes",
+      executeInstance: pr => pr.update(properties)
+    },
+    merge: {
+      description: "merge the pr",
+      executeInstance: pr => pr.merge()
+    },
+    decline: {
+      description: "decline the pr",
+      executeInstance: pr => pr.decline()
     }
-  ]
+  })
 ]) {
   const command = program.command(`${o[0]} [name...]`);
   command
@@ -265,4 +224,13 @@ function visibleAttributes(object) {
       ([k, v]) => k !== "name" && !v.private
     )
   );
+}
+
+function type(clazz, extra) {
+  return [
+    clazz.type,
+    clazz.collectionName,
+    ["fullName", ...Object.keys(visibleAttributes(clazz))],
+    extra
+  ];
 }
