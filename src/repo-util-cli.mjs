@@ -2,7 +2,7 @@
 
 import { readFileSync } from "fs";
 import { fileURLToPath } from "url";
-import { program, Option } from "commander";
+import { program } from "commander";
 import {
   Repository,
   RepositoryGroup,
@@ -38,23 +38,9 @@ program
   );
 
 for (const o of [
-  type(MultiGroupProvider, {
-    update: {
-      description: "update provider attributes",
-      executeInstance: async provider => provider.update(properties)
-    }
-  }),
-  type(RepositoryGroup, {
-    update: {
-      description: "update group attributes",
-      executeInstance: async group => group.update(properties)
-    }
-  }),
+  type(MultiGroupProvider),
+  type(RepositoryGroup),
   type(Repository, {
-    update: {
-      description: "update repository attributes",
-      executeInstance: async repository => repository.update(properties)
-    },
     create: {
       suffix: "<names>",
       description: "create repositories",
@@ -78,20 +64,12 @@ for (const o of [
         console.log("create a hook");
       }
     },
-    update: {
-      description: "update hook attributes",
-      executeInstance: hook => hook.update(properties)
-    },
     delete: {
       description: "delete a hook",
       executeInstance: hook => hook.delete()
     }
   }),
   type(PullRequest, {
-    update: {
-      description: "update pr attributes",
-      executeInstance: pr => pr.update(properties)
-    },
     merge: {
       description: "merge the pr",
       executeInstance: pr => pr.merge()
@@ -231,6 +209,12 @@ function type(clazz, extra) {
     clazz.type,
     clazz.collectionName,
     ["fullName", ...Object.keys(visibleAttributes(clazz))],
-    extra
+    {
+      update: {
+        description: `update ${clazz.type} attributes`,
+        executeInstance: object => object.update(properties)
+      },
+      ...extra
+    }
   ];
 }
