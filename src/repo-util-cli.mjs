@@ -139,36 +139,29 @@ async function list(provider, names, options, slot, attributes, actions) {
         }
       }
     }
-    // modify
-    if (Object.keys(properties).length > 0) {
-      for (const [k, v] of Object.entries(properties)) {
-        object[k] = v;
-      }
-      await object.update();
-    } else {
-      if (options.json) {
-        json.push(object);
-      } else {
-        for (const a of attributes) {
-          let value = object[a];
-          if (Array.isArray(value)) {
-            value = value.join(" ");
-          } else if (value instanceof Set) {
-            value = [...value].join(" ");
-          } else if (value === undefined) {
-            value = "";
-          }
 
-          if (options.identifier === false) {
-            console.log(value);
-          } else {
-            console.log(
-              attributes.indexOf(a) === 0
-                ? object.fullName + ":"
-                : "             ".substring(a.length) + a + ":",
-              value
-            );
-          }
+    if (options.json) {
+      json.push(object);
+    } else {
+      for (const a of attributes) {
+        let value = object[a];
+        if (Array.isArray(value)) {
+          value = value.join(" ");
+        } else if (value instanceof Set) {
+          value = [...value].join(" ");
+        } else if (value === undefined) {
+          value = "";
+        }
+
+        if (options.identifier === false) {
+          console.log(value);
+        } else {
+          console.log(
+            attributes.indexOf(a) === 0
+              ? object.fullName + ":"
+              : "             ".substring(a.length) + a + ":",
+            value
+          );
         }
       }
     }
@@ -212,7 +205,13 @@ function type(clazz, extra) {
     {
       update: {
         description: `update ${clazz.type} attributes`,
-        executeInstance: object => object.update(properties)
+        executeInstance: object => {
+          for (const [k, v] of Object.entries(properties)) {
+            object[k] = v;
+          }
+
+          object.update();
+        }
       },
       ...extra
     }
