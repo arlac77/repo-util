@@ -32,15 +32,6 @@ const { version, description } = JSON.parse(
   })
 );
 
-async function createCache()
-{
-  const dir = join(homedir(), ".cache/repository-provider");
-  await mkdir(dir,{ recursive: true });
-  const db = await levelup(leveldown(dir));
-  return new ETagCacheLevelDB(db);
-}
-
-createCache();
 
 const properties = {};
 
@@ -188,12 +179,23 @@ async function list(provider, names, options, slot, attributes, actions) {
   }
 }
 
+async function createCache()
+{
+  const dir = join(homedir(), ".cache/repository-provider");
+  await mkdir(dir,{ recursive: true });
+  const db = await levelup(leveldown(dir));
+  return new ETagCacheLevelDB(db);
+}
+
 async function prepareProvider(options) {
   const provider = await AggregationProvider.initialize(
     [],
     properties,
     process.env
   );
+
+  const cache = await createCache();
+  provider._providers.forEach(p => p.cache = cache);
 
   provider.messageDestination = {
     trace: () => {},
