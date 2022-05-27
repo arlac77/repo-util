@@ -1,8 +1,13 @@
 #!/usr/bin/env node
 
 import { readFileSync } from "fs";
+import { mkdir } from "fs/promises";
+import { join } from "path";
+import { homedir } from "os";
 import { fileURLToPath } from "url";
 import { program } from "commander";
+import levelup from "levelup";
+import leveldown from "leveldown";
 import {
   Repository,
   RepositoryGroup,
@@ -16,6 +21,7 @@ import {
   MultiGroupProvider
 } from "repository-provider";
 import AggregationProvider from "aggregation-repository-provider";
+import { ETagCacheLevelDB } from "etag-cache-leveldb";
 
 process.on("uncaughtException", console.error);
 process.on("unhandledRejection", console.error);
@@ -25,6 +31,16 @@ const { version, description } = JSON.parse(
     encoding: "utf8"
   })
 );
+
+async function createCache()
+{
+  const dir = join(homedir(), ".cache/repository-provider");
+  await mkdir(dir,{ recursive: true });
+  const db = await levelup(leveldown(dir));
+  return new ETagCacheLevelDB(db);
+}
+
+createCache();
 
 const properties = {};
 
