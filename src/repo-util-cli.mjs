@@ -32,7 +32,6 @@ const { version, description } = JSON.parse(
   })
 );
 
-
 const properties = {};
 
 program
@@ -40,6 +39,7 @@ program
   .version(version)
   .option("--trace", "log level trace")
   .option("--debug", "log level debug")
+  .option("--cache", "cache requests")
   .option("-D --define <a=b>", "define property", str =>
     Object.assign(properties, Object.fromEntries([str.split(/=/)]))
   );
@@ -179,10 +179,9 @@ async function list(provider, names, options, slot, attributes, actions) {
   }
 }
 
-async function createCache()
-{
+async function createCache() {
   const dir = join(homedir(), ".cache/repository-provider");
-  await mkdir(dir,{ recursive: true });
+  await mkdir(dir, { recursive: true });
   const db = await levelup(leveldown(dir));
   return new ETagCacheLevelDB(db);
 }
@@ -194,8 +193,10 @@ async function prepareProvider(options) {
     process.env
   );
 
-  const cache = await createCache();
-  provider._providers.forEach(p => p.cache = cache);
+  if (options.cache) {
+    const cache = await createCache();
+    provider._providers.forEach(p => (p.cache = cache));
+  }
 
   provider.messageDestination = {
     trace: () => {},
