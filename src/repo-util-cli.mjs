@@ -37,9 +37,6 @@ const properties = {};
 program
   .description(description)
   .version(version)
-  .option("--trace", "log level trace")
-  .option("--debug", "log level debug")
-  .option("--cache", "cache requests")
   .option("-D --define <a=b>", "define property", str =>
     Object.assign(properties, Object.fromEntries([str.split(/=/)]))
   );
@@ -89,6 +86,9 @@ for (const o of [
 ]) {
   const command = program.command(`${o[0]} [name...]`);
   command
+    .option("--trace", "log level trace")
+    .option("--debug", "log level debug")
+    .option("--cache", "cache requests")
     .option("--json", "output as json")
     .option("--no-identifier", "do not output identifier, show attributes only")
     .option("-a, --attribute <attributes>", "list attribute", a =>
@@ -199,8 +199,8 @@ async function prepareProvider(options) {
   }
 
   provider.messageDestination = {
-    trace: () => {},
-    info: () => {},
+    trace: options.trace ? console.log : () => {},
+    info: console.log,
     warn: console.warn,
     error: console.error
   };
