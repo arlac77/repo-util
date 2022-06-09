@@ -47,5 +47,5 @@ test("cli list repositories as json", async t => {
 
   const output = JSON.parse(p.stdout);
   
-  t.true(output.length > 5);
+  t.true(output.length > 3);
 });
