@@ -88,7 +88,8 @@ for (const o of [
   command
     .option("--trace", "log level trace")
     .option("--debug", "log level debug")
-    .option("--cache", "cache requests")
+    .option("--no-cache", "cache requests")
+    .option("--statistics", "cache statistics")
     .option("--json", "output as json")
     .option("--no-identifier", "do not output identifier, show attributes only")
     .option("-a, --attribute <attributes>", "list attribute", a =>
@@ -176,6 +177,10 @@ async function list(provider, names, options, slot, attributes, actions) {
 
   if (options.json) {
     console.log(JSON.stringify(json));
+  }
+
+  if (options.statistics) {
+    console.log(provider._providers[0].cache.statistics);
   }
 }
 
