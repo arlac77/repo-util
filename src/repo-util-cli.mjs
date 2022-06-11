@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
-import { readFileSync } from "fs";
-import { mkdir } from "fs/promises";
-import { join } from "path";
-import { homedir } from "os";
-import { fileURLToPath } from "url";
+import { readFileSync } from "node:fs";
+import { mkdir } from "node:fs/promises";
+import { join } from "node:path";
+import { homedir } from "node:os";
+import { fileURLToPath } from "node:url";
 import { program } from "commander";
 import levelup from "levelup";
 import leveldown from "leveldown";
