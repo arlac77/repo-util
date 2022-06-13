@@ -180,7 +180,7 @@ async function list(provider, names, options, slot, attributes, actions) {
   }
 
   if (options.statistics) {
-    console.log(provider._providers[0].cache.statistics);
+    console.error(provider._providers[0].cache.statistics);
   }
 }
 
