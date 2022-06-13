@@ -1,10 +1,8 @@
 #!/usr/bin/env node
 
-import { readFileSync } from "node:fs";
 import { mkdir } from "node:fs/promises";
 import { join } from "node:path";
 import { homedir } from "node:os";
-import { fileURLToPath } from "node:url";
 import { program } from "commander";
 import levelup from "levelup";
 import leveldown from "leveldown";
@@ -22,21 +20,16 @@ import {
 } from "repository-provider";
 import AggregationProvider from "aggregation-repository-provider";
 import { ETagCacheLevelDB } from "etag-cache-leveldb";
+import pkg from "../package.json" assert { type: "json" };
 
 process.on("uncaughtException", console.error);
 process.on("unhandledRejection", console.error);
 
-const { version, description } = JSON.parse(
-  readFileSync(fileURLToPath(new URL("../package.json", import.meta.url)), {
-    encoding: "utf8"
-  })
-);
-
 const properties = {};
 
 program
-  .description(description)
-  .version(version)
+  .description(pkg.description)
+  .version(pkg.version)
   .option("-D --define <a=b>", "define property", str =>
     Object.assign(properties, Object.fromEntries([str.split(/=/)]))
   );
