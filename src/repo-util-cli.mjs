@@ -84,7 +84,8 @@ for (const o of [
     .option("--no-cache", "cache requests")
     .option("--statistics", "cache statistics")
     .option("--json", "output as json")
-    .option("--no-identifier", "do not output identifier, show attributes only")
+    .option("--no-identifier", "do not output identifier, show attribute values only")
+    .option("--no-undefined", "do not output undefined attribute values")
     .option("-a, --attribute <attributes>", "list attribute", a =>
       a.split(",")
     );
@@ -140,6 +141,7 @@ function listAttributes(object, attributes, options) {
     } else if (value instanceof Set) {
       value = [...value].join(" ");
     } else if (value === undefined) {
+      if(options["undefined"])
       value = "";
     }
 
