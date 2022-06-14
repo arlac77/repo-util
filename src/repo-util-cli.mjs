@@ -129,6 +129,36 @@ function normalize(names) {
   return names.length === 0 ? ["*"] : names;
 }
 
+function listAttributes(object, attributes, options) {
+  const values = {};
+  let maxKeyLength = 0;
+
+  for (const a of attributes) {
+    let value = object[a];
+    if (Array.isArray(value)) {
+      value = value.join(" ");
+    } else if (value instanceof Set) {
+      value = [...value].join(" ");
+    } else if (value === undefined) {
+      value = "";
+    }
+
+    if (a.length > maxKeyLength) {
+      maxKeyLength = a.length;
+    }
+
+    values[a] = value;
+  }
+
+  for (const [k, v] of Object.entries(values)) {
+    if (options.identifier) {
+      console.log(" ".repeat(maxKeyLength - k.length + 2) + k + `: ${v}`);
+    } else {
+      console.log(v);
+    }
+  }
+}
+
 async function list(provider, names, options, slot, attributes, actions) {
   const json = [];
 
@@ -144,27 +174,10 @@ async function list(provider, names, options, slot, attributes, actions) {
     if (options.json) {
       json.push(object);
     } else {
-      for (const a of attributes) {
-        let value = object[a];
-        if (Array.isArray(value)) {
-          value = value.join(" ");
-        } else if (value instanceof Set) {
-          value = [...value].join(" ");
-        } else if (value === undefined) {
-          value = "";
-        }
-
-        if (options.identifier === false) {
-          console.log(value);
-        } else {
-          console.log(
-            attributes.indexOf(a) === 0
-              ? object.fullName + ":"
-              : "             ".substring(a.length) + a + ":",
-            value
-          );
-        }
+      if (options.identifier) {
+        console.log(`${object.fullName}:`);
       }
+      listAttributes(object, attributes, options);
     }
   }
 
