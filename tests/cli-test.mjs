@@ -16,7 +16,7 @@ test("cli list provider", async t => {
   t.is(p.exitCode, 0);
 });
 
-test("cli list branches", async t => {
+test.serial("cli list branches", async t => {
   const p = await execa(
     "node",
     [
@@ -32,7 +32,7 @@ test("cli list branches", async t => {
   t.is(p.exitCode, 0);
 });
 
-test("cli list repositories as json", async t => {
+test.serial("cli list repositories as json", async t => {
   const p = await execa(
     "node",
     [
