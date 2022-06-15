@@ -82,7 +82,7 @@ for (const o of [
     .option("--trace", "log level trace")
     .option("--debug", "log level debug")
     .option("--no-cache", "cache requests")
-    .option("--statistics", "cache statistics")
+    .option("--statistics", "show cache statistics")
     .option("--json", "output as json")
     .option("--no-identifier", "do not output identifier, show attribute values only")
     .option("--no-undefined", "do not output undefined attribute values")
