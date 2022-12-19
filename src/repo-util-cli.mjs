@@ -1,11 +1,6 @@
 #!/usr/bin/env node
 
-import { mkdir } from "node:fs/promises";
-import { join } from "node:path";
-import { homedir } from "node:os";
 import { program } from "commander";
-import levelup from "levelup";
-import leveldown from "leveldown";
 import {
   Repository,
   RepositoryGroup,
@@ -18,9 +13,8 @@ import {
   PullRequest,
   MultiGroupProvider
 } from "repository-provider";
-import AggregationProvider from "aggregation-repository-provider";
-import { ETagCacheLevelDB } from "etag-cache-leveldb";
 import pkg from "../package.json" assert { type: "json" };
+import { initializeRepositoryProvider } from "./setup-provider.mjs";
 
 process.on("uncaughtException", console.error);
 process.on("unhandledRejection", console.error);
@@ -33,6 +27,8 @@ program
   .option("-D --define <a=b>", "define property", str =>
     Object.assign(properties, Object.fromEntries([str.split(/=/)]))
   );
+
+const { provider } = await initializeRepositoryProvider(program);
 
 for (const o of [
   type(MultiGroupProvider),
@@ -84,14 +80,18 @@ for (const o of [
     .option("--no-cache", "cache requests")
     .option("--statistics", "show cache statistics")
     .option("--json", "output as json")
-    .option("--no-identifier", "do not output identifier, show attribute values only")
+    .option(
+      "--no-identifier",
+      "do not output identifier, show attribute values only"
+    )
     .option("--no-undefined", "do not output undefined attribute values")
     .option("-a, --attribute <attributes>", "list attribute", a =>
       a.split(",")
     );
+
   command.action(async (names, options) =>
     list(
-      await prepareProvider(options),
+      provider,
       names,
       options,
       o[1],
@@ -110,11 +110,7 @@ for (const o of [
         );
 
         command.action(async (names, options) => {
-          await actionOptions.execute(
-            await prepareProvider(options),
-            names,
-            options
-          );
+          await actionOptions.execute(provider, names, options);
         });
       }
       if (actionOptions.executeInstance) {
@@ -141,8 +137,7 @@ function listAttributes(object, attributes, options) {
     } else if (value instanceof Set) {
       value = [...value].join(" ");
     } else if (value === undefined) {
-      if(options["undefined"])
-      value = "";
+      if (options["undefined"]) value = "";
     }
 
     if (a.length > maxKeyLength) {
@@ -190,35 +185,6 @@ async function list(provider, names, options, slot, attributes, actions) {
   if (options.statistics) {
     console.error(provider._providers[0].cache.statistics);
   }
-}
-
-async function createCache() {
-  const dir = join(homedir(), ".cache/repository-provider");
-  await mkdir(dir, { recursive: true });
-  const db = await levelup(leveldown(dir));
-  return new ETagCacheLevelDB(db);
-}
-
-async function prepareProvider(options) {
-  const provider = await AggregationProvider.initialize(
-    [],
-    properties,
-    process.env
-  );
-
-  if (options.cache) {
-    const cache = await createCache();
-    provider._providers.forEach(p => (p.cache = cache));
-  }
-
-  provider.messageDestination = {
-    trace: options.trace ? console.log : () => {},
-    info: console.log,
-    warn: console.warn,
-    error: console.error
-  };
-
-  return provider;
 }
 
 function visibleAttributes(object) {
