@@ -41,7 +41,7 @@ program
 
 const { provider } = await initializeRepositoryProvider(program);
 
-for (const o of [
+for (const t of [
   type(MultiGroupProvider),
   type(RepositoryGroup),
   type(Repository, {
@@ -84,25 +84,24 @@ for (const o of [
     }
   })
 ]) {
-  const command = program.command(`${o[0]} [name...]`);
+  const command = program.command(`${t.name} [name...]`);
+
+  const actions = t.actions;
 
   command.action(async (names, options) =>
     list(
       provider,
       names,
-      o[1],
-      options.attribute ? options.attribute : o[2],
+      t,
       actions
     )
   );
-
-  const actions = o[3];
 
   if (actions) {
     for (const [an, actionOptions] of Object.entries(actions)) {
       if (actionOptions.execute) {
         const command = program.command(
-          `${o[0]}-${an} ${actionOptions.suffix}`
+          `${t.name}-${an} ${actionOptions.suffix}`
         );
 
         command.action(async (names, options) => {
@@ -152,12 +151,12 @@ function listAttributes(object, attributes, options) {
   }
 }
 
-async function list(provider, names, slot, attributes, actions) {
+async function list(provider, names, type, actions) {
   const options = program.optsWithGlobals();
 
   const json = [];
 
-  for await (const object of provider[slot](normalize(names))) {
+  for await (const object of provider[type.collectionName](normalize(names))) {
     if (actions) {
       for (const [name, action] of Object.entries(actions)) {
         if (options[name] && action.executeInstance) {
@@ -172,7 +171,7 @@ async function list(provider, names, slot, attributes, actions) {
       if (options.identifier) {
         console.log(`${object.fullName}:`);
       }
-      listAttributes(object, attributes, options);
+      listAttributes(object, options.attribute || type.attributes, options);
     }
   }
 
@@ -194,11 +193,11 @@ function visibleAttributes(object) {
 }
 
 function type(clazz, extra) {
-  return [
-    clazz.type,
-    clazz.collectionName,
-    ["fullName", ...Object.keys(visibleAttributes(clazz))],
-    {
+  return {
+    name: clazz.type,
+    collectionName: clazz.collectionName,
+    attributes: ["fullName", ...Object.keys(visibleAttributes(clazz))],
+    actions: {
       update: {
         description: `update ${clazz.type} attributes`,
         executeInstance: object => {
@@ -211,5 +210,5 @@ function type(clazz, extra) {
       },
       ...extra
     }
-  ];
+  };
 }
