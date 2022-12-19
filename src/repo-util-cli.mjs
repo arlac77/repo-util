@@ -24,6 +24,17 @@ const properties = {};
 program
   .description(pkg.description)
   .version(pkg.version)
+  .option("--no-cache", "cache requests")
+  .option("--statistics", "show cache statistics")
+  .option("--trace", "log level trace")
+  .option("--debug", "log level debug")
+  .option(
+    "--no-identifier",
+    "do not output identifier, show attribute values only"
+  )
+  .option("-a, --attribute <attributes>", "list attribute", a => a.split(","))
+  .option("--no-undefined", "do not output undefined attribute values")
+  .option("--json", "output as json")
   .option("-D --define <a=b>", "define property", str =>
     Object.assign(properties, Object.fromEntries([str.split(/=/)]))
   );
@@ -74,26 +85,11 @@ for (const o of [
   })
 ]) {
   const command = program.command(`${o[0]} [name...]`);
-  command
-    .option("--trace", "log level trace")
-    .option("--debug", "log level debug")
-    .option("--no-cache", "cache requests")
-    .option("--statistics", "show cache statistics")
-    .option("--json", "output as json")
-    .option(
-      "--no-identifier",
-      "do not output identifier, show attribute values only"
-    )
-    .option("--no-undefined", "do not output undefined attribute values")
-    .option("-a, --attribute <attributes>", "list attribute", a =>
-      a.split(",")
-    );
 
   command.action(async (names, options) =>
     list(
       provider,
       names,
-      options,
       o[1],
       options.attribute ? options.attribute : o[2],
       actions
@@ -156,7 +152,9 @@ function listAttributes(object, attributes, options) {
   }
 }
 
-async function list(provider, names, options, slot, attributes, actions) {
+async function list(provider, names, slot, attributes, actions) {
+  const options = program.optsWithGlobals();
+
   const json = [];
 
   for await (const object of provider[slot](normalize(names))) {
