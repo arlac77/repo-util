@@ -39,7 +39,7 @@ program
     Object.assign(properties, Object.fromEntries([str.split(/=/)]))
   );
 
-const { provider } = await initializeRepositoryProvider(program);
+const { provider, cache } = await initializeRepositoryProvider(program);
 
 for (const t of [
   type(MultiGroupProvider),
@@ -179,8 +179,8 @@ async function list(provider, names, type, actions) {
     console.log(JSON.stringify(json));
   }
 
-  if (options.statistics) {
-    console.error(provider._providers[0].cache.statistics);
+  if (options.statistics && cache) {
+    console.error(cache.statistics);
   }
 }
 
