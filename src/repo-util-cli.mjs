@@ -16,9 +16,6 @@ import {
 import pkg from "../package.json" assert { type: "json" };
 import { initializeRepositoryProvider } from "./setup-provider.mjs";
 
-process.on("uncaughtException", console.error);
-process.on("unhandledRejection", console.error);
-
 const properties = {};
 
 program
