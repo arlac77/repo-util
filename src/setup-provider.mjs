@@ -20,7 +20,7 @@ export async function initializeRepositoryProvider(program, properties) {
 
   if(!globalThis.fetch) {
      const module = await import("node-fetch");
-     flobalThis.fetch = module.default;
+     globalThis.fetch = module.default;
   }
 
   const provider = await AggregationProvider.initialize(
