@@ -14,14 +14,15 @@ import {
   MultiGroupProvider
 } from "repository-provider";
 import pkg from "../package.json" assert { type: "json" };
-import { initializeRepositoryProvider } from "./setup-provider.mjs";
+import { initializeRepositoryProvider, initializeCommandLine } from "./setup-provider.mjs";
 
 const properties = {};
+
+initializeCommandLine(program);
 
 program
   .description(pkg.description)
   .version(pkg.version)
-  .option("--no-cache", "cache requests")
   .option("--statistics", "show cache statistics")
   .option("--trace", "log level trace")
   .option("--debug", "log level debug")
