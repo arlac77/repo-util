@@ -23,7 +23,6 @@ initializeCommandLine(program);
 program
   .description(pkg.description)
   .version(pkg.version)
-  .option("--statistics", "show cache statistics")
   .option("--trace", "log level trace")
   .option("--debug", "log level debug")
   .option(
