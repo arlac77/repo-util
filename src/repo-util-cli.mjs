@@ -115,7 +115,7 @@ for (const t of [
 program.parse(process.argv);
 
 function normalize(names) {
-  return names.length === 0 ? ["*"] : names;
+  return names.length === 0 ? ["**/*"] : names;
 }
 
 function listAttributes(object, attributes, options) {
@@ -168,7 +168,7 @@ async function list(provider, names, type, actions) {
       if (options.identifier) {
         console.log(`${object.fullName}:`);
       }
-      listAttributes(object, options.attribute || type.attributes, options);
+      listAttributes(object, options.attribute || type.attributes, options);
     }
   }
 
@@ -197,12 +197,14 @@ function type(clazz, extra) {
     actions: {
       update: {
         description: `update ${clazz.type} attributes`,
-        executeInstance: object => {
-          for (const [k, v] of Object.entries(properties)) {
-            object[k] = v;
-          }
+        executeInstance: async object => {
+          Object.assign(object, properties);
 
-          object.update();
+          /*for (const [k, v] of Object.entries(properties)) {
+            object[k] = v;
+          }*/
+
+          await object.update();
         }
       },
       ...extra
