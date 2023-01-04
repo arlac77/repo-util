@@ -14,9 +14,13 @@ import {
   MultiGroupProvider
 } from "repository-provider";
 import pkg from "../package.json" assert { type: "json" };
-import { initializeRepositoryProvider, initializeCommandLine } from "./setup-provider.mjs";
+import {
+  initializeRepositoryProvider,
+  initializeCommandLine
+} from "./setup-provider.mjs";
 
 const properties = {};
+let action;
 
 initializeCommandLine(program);
 
@@ -85,14 +89,7 @@ for (const t of [
 
   const actions = t.actions;
 
-  command.action(async (names, options) =>
-    list(
-      provider,
-      names,
-      t,
-      actions
-    )
-  );
+  command.action(async (names, options) => list(provider, names, t, actions));
 
   if (actions) {
     for (const [an, actionOptions] of Object.entries(actions)) {
@@ -100,13 +97,16 @@ for (const t of [
         const command = program.command(
           `${t.name}-${an} ${actionOptions.suffix}`
         );
-
         command.action(async (names, options) => {
           await actionOptions.execute(provider, names, options);
         });
       }
       if (actionOptions.executeInstance) {
-        command.option(`--${an}`, actionOptions.description);
+        command.option(
+          `--${an}`,
+          actionOptions.description,
+          () => (action = an)
+        );
       }
     }
   }
@@ -154,11 +154,10 @@ async function list(provider, names, type, actions) {
   const json = [];
 
   for await (const object of provider[type.collectionName](normalize(names))) {
-    if (actions) {
-      for (const [name, action] of Object.entries(actions)) {
-        if (options[name] && action.executeInstance) {
-          await action.executeInstance(object, options);
-        }
+    if (actions && action) {
+      const a = actions[action];
+      if (a?.executeInstance) {
+        await a.executeInstance(object, options);
       }
     }
 
@@ -199,11 +198,6 @@ function type(clazz, extra) {
         description: `update ${clazz.type} attributes`,
         executeInstance: async object => {
           Object.assign(object, properties);
-
-          /*for (const [k, v] of Object.entries(properties)) {
-            object[k] = v;
-          }*/
-
           await object.update();
         }
       },
