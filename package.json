@@ -25,7 +25,7 @@
     "bitbucket-repository-provider": "^4.4.30",
     "commander": "^9.4.1",
     "etag-cache-leveldb": "^1.4.1",
-    "gitea-repository-provider": "^2.4.32",
+    "gitea-repository-provider": "^2.4.33",
     "github-repository-provider": "^7.33.34",
     "leveldown": "^6.1.1",
     "levelup": "^5.1.1",
