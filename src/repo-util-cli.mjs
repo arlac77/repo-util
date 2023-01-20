@@ -75,6 +75,13 @@ for (const t of [
     }
   }),
   type(PullRequest, {
+    create: {
+      suffix: "<name>",
+      description: "create a PR",
+      execute: () => {
+        console.log("create a PR");
+      }
+    },
     merge: {
       description: "merge the pr",
       executeInstance: pr => pr.merge()
