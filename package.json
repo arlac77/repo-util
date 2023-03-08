@@ -22,10 +22,10 @@
   },
   "dependencies": {
     "aggregation-repository-provider": "^5.3.23",
-    "bitbucket-repository-provider": "^5.0.1",
+    "bitbucket-repository-provider": "^5.0.2",
     "commander": "^10.0.0",
-    "etag-cache-leveldb": "^1.4.2",
-    "gitea-repository-provider": "^2.4.41",
+    "etag-cache-leveldb": "^2.0.0",
+    "gitea-repository-provider": "^3.0.0",
     "github-repository-provider": "^8.0.5",
     "leveldown": "^6.1.1",
     "levelup": "^5.1.1",
