@@ -28,8 +28,7 @@
     "gitea-repository-provider": "^3.0.2",
     "github-repository-provider": "^8.0.8",
     "leveldown": "^6.1.1",
-    "levelup": "^5.1.1",
-    "local-repository-provider": "^8.1.13"
+    "levelup": "^5.1.1"
   },
   "devDependencies": {
     "ava": "^5.2.0",
