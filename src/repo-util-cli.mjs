@@ -54,7 +54,21 @@ for (const t of [
           await provider.createRepository(name, properties);
         }
       }
+    },
+    addHook: {
+      suffix: "<names>",
+      description: "add a Hook",
+      executeInstance: async (repository, options) => {
+        const hook = new repository.hookClass(repository, "hook1", {
+          id: 77,
+          url: "http://somewere.com/path",
+          events: new Set(["a"])
+        });
+        
+        console.log(hook);
+      }
     }
+
   }),
   type(Branch),
   type(Tag),
@@ -62,13 +76,6 @@ for (const t of [
   type(Milestone),
   type(Application),
   type(Hook, {
-    create: {
-      suffix: "<name>",
-      description: "create a hook",
-      execute: () => {
-        console.log("create a hook");
-      }
-    },
     delete: {
       description: "delete a hook",
       executeInstance: hook => hook.delete()
