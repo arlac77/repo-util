@@ -42,10 +42,8 @@ program
 const { provider, cache } = await initializeRepositoryProvider(program);
 
 for (const t of [
-  type(MultiGroupProvider),
-  type(RepositoryGroup),
-  type(Repository, {
-    create: {
+  type(MultiGroupProvider, {
+    "create-repository": {
       suffix: "<names>",
       description: "create repositories",
       execute: async (provider, names, options) => {
@@ -53,23 +51,37 @@ for (const t of [
           await provider.createRepository(name, properties);
         }
       }
-    },
-    addHook: {
+    }
+  }),
+  type(RepositoryGroup),
+  type(Repository, {
+    "add-hook": {
       suffix: "<names>",
-      description: "add a Hook",
+      description: "add a hook",
+      prepareCommand(command) {
+        command.option("-u, --url <url>", "hook url to be called")
+      },
       executeInstance: async (repository, options) => {
+        console.log("ADD HOOK");
+        console.log(options);
         const hook = new repository.hookClass(repository, "hook1", {
-          id: 77,
           url: "http://somewere.com/path",
           events: new Set(["a"])
         });
-        
+
         console.log(hook);
       }
     }
-
   }),
-  type(Branch),
+  type(Branch, {
+    "create-pull-request": {
+      suffix: "<name>",
+      description: "create a pull-request from a branch",
+      execute: () => {
+        console.log("create a PR");
+      }
+    }
+  }),
   type(Tag),
   type(Project),
   type(Milestone),
@@ -81,13 +93,6 @@ for (const t of [
     }
   }),
   type(PullRequest, {
-    create: {
-      suffix: "<name>",
-      description: "create a PR",
-      execute: () => {
-        console.log("create a PR");
-      }
-    },
     merge: {
       description: "merge the pr",
       executeInstance: pr => pr.merge()
@@ -98,7 +103,7 @@ for (const t of [
     }
   })
 ]) {
-  const command = program.command(`${t.name} [name...]`);
+  const command = program.command(`${t.name} [name...]` /*,`list ${t.name}`*/);
 
   const actions = t.actions;
 
@@ -108,13 +113,15 @@ for (const t of [
     for (const [an, actionOptions] of Object.entries(actions)) {
       if (actionOptions.execute) {
         const command = program.command(
-          `${t.name}-${an} ${actionOptions.suffix}`
+          `${t.name}-${an} ${actionOptions.suffix}`,
+          actionOptions.description
         );
-        command.action(async (names, options) => {
-          await actionOptions.execute(provider, names, options);
-        });
+        command.action(async (names, options) =>
+          actionOptions.execute(provider, names, options)
+        );
       }
       if (actionOptions.executeInstance) {
+        actionOptions.prepareCommand?.(command);
         command.option(
           `--${an}`,
           actionOptions.description,
