@@ -12,11 +12,11 @@ import {
   PullRequest,
   MultiGroupProvider
 } from "repository-provider";
-import pkg from "../package.json" assert { type: "json" };
 import {
   initializeRepositoryProvider,
   initializeCommandLine
-} from "./setup-provider.mjs";
+} from "repository-provider-cli-support";
+import pkg from "../package.json" assert { type: "json" };
 
 const properties = {};
 let action;
@@ -59,7 +59,7 @@ for (const t of [
       suffix: "<names>",
       description: "add a hook",
       prepareCommand(command) {
-        command.option("-u, --url <url>", "hook url to be called")
+        command.option("-u, --url <url>", "hook url to be called");
       },
       executeInstance: async (repository, options) => {
         console.log("ADD HOOK");
