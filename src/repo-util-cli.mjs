@@ -16,7 +16,7 @@ import {
   initializeRepositoryProvider,
   initializeCommandLine
 } from "repository-provider-cli-support";
-import pkg from "../package.json" assert { type: "json" };
+import pkg from "../package.json" with { type: "json" };
 
 const properties = {};
 let action;
