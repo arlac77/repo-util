@@ -30,10 +30,10 @@
     "commander": "^12.1.0",
     "etag-cache-leveldb": "^2.1.2",
     "gitea-repository-provider": "^4.2.4",
-    "github-repository-provider": "^9.0.18",
+    "github-repository-provider": "^9.0.19",
     "leveldown": "^6.1.1",
     "levelup": "^5.1.1",
-    "repository-provider-cli-support": "^2.2.2"
+    "repository-provider-cli-support": "^2.2.3"
   },
   "devDependencies": {
     "ava": "^6.1.3",
