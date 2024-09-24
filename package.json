@@ -28,12 +28,12 @@
     "aggregation-repository-provider": "^7.0.4",
     "bitbucket-repository-provider": "^6.0.29",
     "commander": "^12.1.0",
-    "etag-cache-leveldb": "^2.1.5",
+    "etag-cache-leveldb": "^2.1.6",
     "gitea-repository-provider": "^4.2.5",
     "github-repository-provider": "^9.0.21",
     "leveldown": "^6.1.1",
     "levelup": "^5.1.1",
-    "repository-provider-cli-support": "^2.2.7"
+    "repository-provider-cli-support": "^2.2.8"
   },
   "devDependencies": {
     "ava": "^6.1.3",
