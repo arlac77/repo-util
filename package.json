@@ -12,7 +12,7 @@
       "email": "markus.felten@gmx.de"
     }
   ],
-  "license": "BSD-2-Clause",
+  "license": "0BSD",
   "bin": {
     "repo-util": "src/repo-util-cli.mjs"
   },
