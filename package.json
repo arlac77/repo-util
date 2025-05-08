@@ -25,12 +25,12 @@
     "lint:docs": "documentation lint ./src**/*.mjs"
   },
   "dependencies": {
-    "aggregation-repository-provider": "^7.0.8",
-    "bitbucket-repository-provider": "^6.0.33",
+    "aggregation-repository-provider": "^7.0.9",
+    "bitbucket-repository-provider": "^6.1.1",
     "commander": "^13.1.0",
     "etag-cache-leveldb": "^2.1.13",
-    "gitea-repository-provider": "^4.2.10",
-    "github-repository-provider": "^9.1.6",
+    "gitea-repository-provider": "^4.2.12",
+    "github-repository-provider": "^9.2.1",
     "leveldown": "^6.1.1",
     "levelup": "^5.1.1",
     "repository-provider-cli-support": "^2.2.18"
