@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "aggregation-repository-provider": "^7.0.18",
-    "bitbucket-repository-provider": "^6.1.12",
+    "bitbucket-repository-provider": "^6.1.13",
     "commander": "^14.0.0",
     "etag-cache-leveldb": "^2.1.14",
     "gitea-repository-provider": "^4.2.19",
