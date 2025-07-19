@@ -25,7 +25,7 @@
     "lint:docs": "documentation lint ./src**/*.mjs"
   },
   "dependencies": {
-    "aggregation-repository-provider": "^7.0.29",
+    "aggregation-repository-provider": "^7.0.30",
     "bitbucket-repository-provider": "^6.1.18",
     "commander": "^14.0.0",
     "etag-cache-leveldb": "^2.1.15",
