@@ -26,15 +26,15 @@
     "lint:docs": "documentation lint ./src**/*.mjs"
   },
   "dependencies": {
-    "aggregation-repository-provider": "^7.0.47",
-    "bitbucket-repository-provider": "^6.3.7",
+    "aggregation-repository-provider": "^7.0.48",
+    "bitbucket-repository-provider": "^6.3.8",
     "commander": "^14.0.2",
     "etag-cache-leveldb": "^2.1.15",
     "gitea-repository-provider": "^4.4.7",
-    "github-repository-provider": "^9.3.8",
+    "github-repository-provider": "^9.3.9",
     "leveldown": "^6.1.1",
     "levelup": "^5.1.1",
-    "repository-provider-cli-support": "^2.2.49"
+    "repository-provider-cli-support": "^2.2.50"
   },
   "devDependencies": {
     "ava": "^6.4.1",
