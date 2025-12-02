@@ -1,5 +1,6 @@
 #!/usr/bin/env -S node --no-warnings --title repo-util
 import { program } from "commander";
+import { attributeIterator } from "pacc";
 import {
   Repository,
   RepositoryGroup,
@@ -200,19 +201,20 @@ async function list(provider, names, type, actions) {
   }
 }
 
-function visibleAttributes(object) {
-  return Object.fromEntries(
-    Object.entries(object.attributes).filter(
+function publicAttributeNames(object) {
+  return [
+    ...attributeIterator(
+      object.attributes,
       ([k, v]) => k !== "name" && !v.private
-    )
-  );
+    ).map(([k, v]) => k)
+  ].flat();
 }
 
 function type(clazz, extra) {
   return {
     name: clazz.type,
     collectionName: clazz.collectionName,
-    attributes: ["fullName", ...Object.keys(visibleAttributes(clazz))],
+    attributes: ["fullName", ...publicAttributeNames(clazz)],
     actions: {
       update: {
         description: `update ${clazz.type} attributes`,
