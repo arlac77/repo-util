@@ -34,7 +34,7 @@
     "github-repository-provider": "^10.0.4",
     "leveldown": "^6.1.1",
     "levelup": "^5.1.1",
-    "repository-provider-cli-support": "^2.2.56"
+    "repository-provider-cli-support": "^3.0.0"
   },
   "devDependencies": {
     "ava": "^6.4.1",
